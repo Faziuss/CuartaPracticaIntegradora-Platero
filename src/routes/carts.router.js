@@ -38,10 +38,50 @@ router.get("/:cid", (req, res) => {
     const cart = carts.find((cart) => cart.id === cid);
 
     if (!cart) {
-      return res.status(404).json({ error: "Carrito no encontrado" });
+      return res.status(404).send({ error: "Carrito no encontrado" });
     }
 
     res.send({ status: "sucess", products: cart.products });
+  });
+});
+
+router.post("/:cid/product/:pid", (req, res) => {
+  const cid = req.params.cid;
+  const pid = req.params.pid;
+
+  fs.readFile(pathName, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).send({ error: "Internal server error" });
+    }
+    const carts = JSON.parse(data);
+
+    const cartIndex = carts.findIndex((cart) => cart.id === cid);
+
+    if (cartIndex === -1) {
+      return res.status(404).send({ error: "Carrito no encontrado" });
+    }
+
+    const existingProductIndex = carts[cartIndex].products.findIndex(
+      (product) => product.id === pid
+    );
+
+    if (existingProductIndex !== -1) {
+      carts[cartIndex].products[existingProductIndex].quantity++;
+    } else {
+      carts[cartIndex].products.push({ id: pid, quantity: 1 });
+    }
+
+    fs.writeFile(pathName, JSON.stringify(carts), (err) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send({ error: "Internal server error" });
+      }
+
+      res.send({
+        status: "sucess",
+        message: "Producto agregado exitosamente al carrito",
+      });
+    });
   });
 });
 
