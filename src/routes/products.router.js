@@ -1,5 +1,6 @@
 import { Router } from "express";
 import fs from "fs";
+import path from "path";
 import { uuid } from "uuidv4";
 
 const router = Router();
@@ -145,14 +146,14 @@ router.put("/:pid", (req, res) => {
 
     const products = JSON.parse(data);
 
-    const i = products.findIndex(product => product.id == pid);
+    const i = products.findIndex((product) => product.id == pid);
 
-    if ( i === -1) {
-      res.status(404).send({ error: "Product not found" });
+    if (i === -1) {
+      res.status(404).send({ error: "Producto no encontrado" });
       return;
     }
 
-    products[i] = {...products[i], ...upProd}
+    products[i] = { ...products[i], ...upProd };
 
     fs.writeFile(pathName, JSON.stringify(products), (err) => {
       if (err) {
@@ -169,3 +170,37 @@ router.put("/:pid", (req, res) => {
 });
 
 export default router;
+
+router.delete("/:pid", (req, res) => {
+  const pid = req.params.pid;
+
+  fs.readFile(pathName, "utf8", (err, data) => {
+    if (err) {
+      res.status(500).send({ error: "Internal server error" });
+      return;
+    }
+
+    const products = JSON.parse(data);
+
+    const i = products.findIndex((product) => product.id == pid);
+
+    if (i === -1) {
+      res.status(404).send({ error: "Producto no encontrado" });
+      return;
+    }
+
+    products.splice(i, 1);
+
+    fs.writeFile(pathName, JSON.stringify(products), (err) => {
+      if (err) {
+        res.status(500).send({ error: "Internal server error" });
+        return;
+      }
+
+      res.send({
+        status: "sucess",
+        message: "Producto eliminado existosamente",
+      });
+    });
+  });
+});
