@@ -110,4 +110,62 @@ router.post("/", (req, res) => {
   });
 });
 
+router.put("/:pid", (req, res) => {
+  const upProd = req.body;
+  const pid = req.params.pid;
+
+  const allowedFields = [
+    "title",
+    "description",
+    "code",
+    "price",
+    "status",
+    "stock",
+    "category",
+    "thumbnails",
+  ];
+  const fields = Object.keys(upProd);
+  const disallowedFields = fields.filter(
+    (field) => !allowedFields.includes(field)
+  );
+
+  if (disallowedFields.length > 0) {
+    return res.status(400).send({
+      error: `Los siguientes campos son inexistentes para la actualización: ${disallowedFields.join(
+        ", "
+      )}`,
+    });
+  }
+
+  fs.readFile(pathName, "utf8", (err, data) => {
+    if (err) {
+      res.status(500).send({ error: "Internal server error" });
+      return;
+    }
+
+    const products = JSON.parse(data);
+
+    const i = products.findIndex(product => product.id == pid);
+
+    if ( i === -1) {
+      res.status(404).send({ error: "Product not found" });
+      return;
+    }
+
+    products[i] = {...products[i], ...upProd}
+
+    fs.writeFile(pathName, JSON.stringify(products), (err) => {
+      if (err) {
+        res.status(500).send({ error: "Internal server error" });
+        return;
+      }
+
+      res.send({
+        status: "sucess",
+        message: "Producto actualizado correctamente",
+      });
+    });
+  });
+});
+
 export default router;
