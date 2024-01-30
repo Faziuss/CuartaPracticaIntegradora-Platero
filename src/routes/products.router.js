@@ -1,16 +1,15 @@
 import { Router } from "express";
 import fs from "fs";
-import path from "path";
-import { uuid } from "uuidv4";
+import { v4 as uuidv4 } from "uuid";
 
 const router = Router();
-const pathName = "./products.json";
+const pathName = "./src/data/products.json";
 
 router.get("/", (req, res) => {
   fs.readFile(pathName, "utf8", (err, data) => {
     if (err) {
-      res.status(500).send({ error: "Internal server error" });
-      return;
+      console.log(err);
+      return res.status(500).send({ error: "Internal server error" });
     }
 
     const products = JSON.parse(data);
@@ -28,8 +27,7 @@ router.get("/:pid", (req, res) => {
 
   fs.readFile(pathName, "utf8", (err, data) => {
     if (err) {
-      res.status(500).send({ error: "Internal server error" });
-      return;
+      return res.status(500).send({ error: "Internal server error" });
     }
 
     const products = JSON.parse(data);
@@ -89,7 +87,7 @@ router.post("/", (req, res) => {
   if (newProd.status == undefined) {
     newProd.status = true;
   }
-  newProd.id = uuid();
+  newProd.id = uuidv4();
 
   fs.readFile(pathName, "utf8", (err, data) => {
     if (err) {
