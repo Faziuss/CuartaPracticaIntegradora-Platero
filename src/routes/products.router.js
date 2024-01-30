@@ -34,8 +34,7 @@ router.get("/:pid", (req, res) => {
     const product = products.find((product) => product.id == pid);
 
     if (!product) {
-      res.status(404).send({ error: "Product not found" });
-      return;
+      return res.status(404).send({ error: "Product not found" });
     }
 
     res.send({ status: "sucess", products: product });
@@ -91,8 +90,7 @@ router.post("/", (req, res) => {
 
   fs.readFile(pathName, "utf8", (err, data) => {
     if (err) {
-      res.status(500).send({ error: "Internal server error" });
-      return;
+      return res.status(500).send({ error: "Internal server error" });
     }
 
     const products = JSON.parse(data);
@@ -100,8 +98,7 @@ router.post("/", (req, res) => {
 
     fs.writeFile(pathName, JSON.stringify(products), (err) => {
       if (err) {
-        res.status(500).send({ error: "Internal server error" });
-        return;
+        return res.status(500).send({ error: "Internal server error" });
       }
 
       res.send({ status: "sucess", message: "Nuevo producto agregado" });
@@ -138,8 +135,7 @@ router.put("/:pid", (req, res) => {
 
   fs.readFile(pathName, "utf8", (err, data) => {
     if (err) {
-      res.status(500).send({ error: "Internal server error" });
-      return;
+      return res.status(500).send({ error: "Internal server error" });
     }
 
     const products = JSON.parse(data);
@@ -147,16 +143,14 @@ router.put("/:pid", (req, res) => {
     const i = products.findIndex((product) => product.id == pid);
 
     if (i === -1) {
-      res.status(404).send({ error: "Producto no encontrado" });
-      return;
+      return res.status(404).send({ error: "Producto no encontrado" });
     }
 
     products[i] = { ...products[i], ...upProd };
 
     fs.writeFile(pathName, JSON.stringify(products), (err) => {
       if (err) {
-        res.status(500).send({ error: "Internal server error" });
-        return;
+        return res.status(500).send({ error: "Internal server error" });
       }
 
       res.send({
@@ -174,8 +168,7 @@ router.delete("/:pid", (req, res) => {
 
   fs.readFile(pathName, "utf8", (err, data) => {
     if (err) {
-      res.status(500).send({ error: "Internal server error" });
-      return;
+      return res.status(500).send({ error: "Internal server error" });
     }
 
     const products = JSON.parse(data);
@@ -183,16 +176,14 @@ router.delete("/:pid", (req, res) => {
     const i = products.findIndex((product) => product.id == pid);
 
     if (i === -1) {
-      res.status(404).send({ error: "Producto no encontrado" });
-      return;
+      return res.status(404).send({ error: "Producto no encontrado" });
     }
 
     products.splice(i, 1);
 
     fs.writeFile(pathName, JSON.stringify(products), (err) => {
       if (err) {
-        res.status(500).send({ error: "Internal server error" });
-        return;
+        return res.status(500).send({ error: "Internal server error" });
       }
 
       res.send({
