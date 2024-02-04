@@ -23,7 +23,7 @@ router.get("/", (req, res) => {
 });
 
 router.get("/:pid", (req, res) => {
-  const pid = req.params.pid;
+  const {pid} = req.params
 
   fs.readFile(pathName, "utf8", (err, data) => {
     if (err) {
@@ -96,6 +96,14 @@ router.post("/", (req, res) => {
     const products = JSON.parse(data);
     products.push(newProd);
 
+    const foundCode = products.some((p) => p.code === newProd.code);
+
+    if (foundCode) {
+      return res.status(400).send({
+        error: "El codigo identificador ya se encuentra en uso",
+      });
+    }
+
     fs.writeFile(pathName, JSON.stringify(products), (err) => {
       if (err) {
         return res.status(500).send({ error: "Internal server error" });
@@ -108,7 +116,7 @@ router.post("/", (req, res) => {
 
 router.put("/:pid", (req, res) => {
   const upProd = req.body;
-  const pid = req.params.pid;
+  const {pid} = req.params
 
   const allowedFields = [
     "title",
@@ -146,6 +154,18 @@ router.put("/:pid", (req, res) => {
       return res.status(404).send({ error: "Producto no encontrado" });
     }
 
+    if (upProd.code) {
+      const foundCode = products.some((p) => {
+        return p.code === upProd.code && p.id !== products[i].id;
+      });
+
+      if (foundCode) {
+        return res
+          .status(404)
+          .send({ error: "El codigo identificador ya se encuentra en uso" });
+      }
+    }
+
     products[i] = { ...products[i], ...upProd };
 
     fs.writeFile(pathName, JSON.stringify(products), (err) => {
@@ -164,7 +184,7 @@ router.put("/:pid", (req, res) => {
 export default router;
 
 router.delete("/:pid", (req, res) => {
-  const pid = req.params.pid;
+  const {pid} = req.params
 
   fs.readFile(pathName, "utf8", (err, data) => {
     if (err) {
