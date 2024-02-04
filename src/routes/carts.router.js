@@ -22,13 +22,17 @@ router.post("/", (req, res) => {
         return res.status(500).send({ error: "Internal server error" });
       }
 
-      res.send({ status: "sucess", message: "Carrito creado exitosamente" });
+      res.send({
+        status: "sucess",
+        message: "Carrito creado exitosamente",
+        id: newCart.id,
+      });
     });
   });
 });
 
 router.get("/:cid", (req, res) => {
-  const cid = req.params.cid;
+  const {cid} = req.params
 
   fs.readFile(pathName, "utf8", (err, data) => {
     if (err) {
@@ -46,8 +50,7 @@ router.get("/:cid", (req, res) => {
 });
 
 router.post("/:cid/product/:pid", (req, res) => {
-  const cid = req.params.cid;
-  const pid = req.params.pid;
+  const {cid, pid} = req.params
 
   fs.readFile(pathName, "utf8", (err, data) => {
     if (err) {
