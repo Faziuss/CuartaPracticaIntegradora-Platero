@@ -6,23 +6,24 @@ const formProduct = d.getElementById("formProduct");
 
 formProduct.addEventListener("submit", async (e) => {
   e.preventDefault();
+  console.log("holaaaaaaaa")
   try {
     const title = d.getElementById("title").value;
     const description = d.getElementById("description").value;
     const code = d.getElementById("code").value;
-    const price = d.getElementById("price").value;
-    const status = d.getElementById("status").value;
-    const stock = d.getElementById("stock").value;
+    const price = Number(d.getElementById("price").value)
+    //const status = d.getElementById("status").value;
+    const stock = Number(d.getElementById("stock").value)
     const category = d.getElementById("category").value;
     const thumbnails = d.getElementById("thumbnails").value;
-
+    
     await axios.post("/api/products", {
       title,
       stock,
       description,
       code,
       price,
-      status,
+      //status,
       stock,
       category,
       thumbnails,

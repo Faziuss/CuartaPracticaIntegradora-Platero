@@ -90,6 +90,9 @@ class Products {
   readProducts = async () => {
     if (fs.existsSync(this.path)) {
       const data = await fs.promises.readFile(this.path, "utf-8");
+      /* if(!data){
+        throw new AppError(500, {message: "Error al leer el archivo"})
+      } */
       const products = JSON.parse(data);
       return products;
     } else {

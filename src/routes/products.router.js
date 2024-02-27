@@ -41,7 +41,7 @@ router.get("/:pid", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   try {
-    const io = app.get("io");
+    const io = req.app.get("io");
     const body = req.body;
     const newProd = await manager.addProduct(body);
 
@@ -71,7 +71,7 @@ router.put("/:pid", async (req, res, next) => {
 
 router.delete("/:pid", async (req, res, next) => {
   try {
-    const io = app.get("io");
+    const io = req.app.get("io");
     const { pid } = req.params;
 
     await manager.deleteProduct(pid);
