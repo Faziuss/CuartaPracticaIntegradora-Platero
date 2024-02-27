@@ -31,7 +31,10 @@ formProduct.addEventListener("submit", async (e) => {
 
     formProduct.reset();
   } catch (error) {
-    console.log(error);
+    if(axios.isAxiosError(error)){
+      return console.log(error.response.data.message)
+    }
+    return console.log(error);
   }
 });
 

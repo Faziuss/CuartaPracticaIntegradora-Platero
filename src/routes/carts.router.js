@@ -1,91 +1,49 @@
 import { Router } from "express";
-import fs from "fs";
-import { v4 as uuidv4 } from "uuid";
-
+import Carts from "../dao/fileManager/carts.js";
+const manager = new Carts();
 const router = Router();
-const pathName = "./src/data/carts.json";
 
-router.post("/", (req, res) => {
-  const newCart = {
-    id: uuidv4(),
-    products: [],
-  };
-  fs.readFile(pathName, "utf8", (err, data) => {
-    if (err) {
-      return res.status(500).send({ error: "Internal server error" });
-    }
-    const carts = JSON.parse(data);
-    carts.push(newCart);
 
-    fs.writeFile(pathName, JSON.stringify(carts), (err) => {
-      if (err) {
-        return res.status(500).send({ error: "Internal server error" });
-      }
+router.post("/", async (req, res, next) => {
+  try {
+    const newCart = await manager.createCart();
 
-      res.send({
-        status: "sucess",
-        message: "Carrito creado exitosamente",
-        id: newCart.id,
-      });
+    return res.status(200).json({
+      status: "sucess",
+      message: "Carrito creado exitosamente",
+      id: newCart.id,
     });
-  });
+  } catch (error) {
+    return next(error);
+  }
 });
 
-router.get("/:cid", (req, res) => {
-  const {cid} = req.params
-
-  fs.readFile(pathName, "utf8", (err, data) => {
-    if (err) {
-      return res.status(500).send({ error: "Internal server error" });
-    }
-    const carts = JSON.parse(data);
-    const cart = carts.find((cart) => cart.id === cid);
-
+router.get("/:cid", async (req, res, next) => {
+  try {
+    const { cid } = req.params;
+    const cart = await manager.getCartById(cid);
     if (!cart) {
-      return res.status(404).send({ error: "Carrito no encontrado" });
+      return res.status(404).send({ message: "Carrito no encontrado" });
     }
-
     res.send({ status: "sucess", products: cart.products });
-  });
+  } catch (error) {
+    return next(error);
+  }
 });
 
-router.post("/:cid/product/:pid", (req, res) => {
-  const {cid, pid} = req.params
+router.post("/:cid/product/:pid", async (req, res, next) => {
+  try {
+    const { cid, pid } = req.params;
 
-  fs.readFile(pathName, "utf8", (err, data) => {
-    if (err) {
-      return res.status(500).send({ error: "Internal server error" });
-    }
-    const carts = JSON.parse(data);
+    await manager.addProductToCart(cid, pid);
 
-    const cartIndex = carts.findIndex((cart) => cart.id === cid);
-
-    if (cartIndex === -1) {
-      return res.status(404).send({ error: "Carrito no encontrado" });
-    }
-
-    const existingProductIndex = carts[cartIndex].products.findIndex(
-      (product) => product.id === pid
-    );
-
-    if (existingProductIndex !== -1) {
-      carts[cartIndex].products[existingProductIndex].quantity++;
-    } else {
-      carts[cartIndex].products.push({ id: pid, quantity: 1 });
-    }
-
-    fs.writeFile(pathName, JSON.stringify(carts), (err) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).send({ error: "Internal server error" });
-      }
-
-      res.send({
-        status: "sucess",
-        message: "Producto agregado exitosamente al carrito",
-      });
+    res.send({
+      status: "sucess",
+      message: "Producto agregado exitosamente al carrito",
     });
-  });
+  } catch (error) {
+    return next(error);
+  }
 });
 
 export default router;
