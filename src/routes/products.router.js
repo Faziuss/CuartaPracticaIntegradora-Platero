@@ -1,5 +1,4 @@
 import { Router } from "express";
-import ProductModel from "../dao/fileManager/models/products.model.js";
 import Products from "../dao/fileManager/dbManagers/products.js";
 import { AppError } from "../helpers/AppError.js";
 import mongoose from "mongoose";
