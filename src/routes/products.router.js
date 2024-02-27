@@ -1,8 +1,10 @@
 import { Router } from "express";
 import Products from "../dao/fileManager/products.js";
+import ProductsDb from "../dao/fileManager/dbManagers/products.js";
 import { AppError } from "../helpers/AppError.js";
 const router = Router();
 const manager = new Products();
+const managerDb = new ProductsDb()
 
 router.get("/", async (req, res, next) => {
   try {
@@ -12,8 +14,8 @@ router.get("/", async (req, res, next) => {
       throw new AppError(400, { message: "Invalid limit query." });
     }
 
-    const products = await manager.readProducts();
-
+    //const products = await manager.readProducts();
+    const products = await managerDb.getProducts()
     if (limit) {
       products = products.slice(0, parseInt(limit, 10));
     }
@@ -43,7 +45,7 @@ router.post("/", async (req, res, next) => {
   try {
     const io = req.app.get("io");
     const body = req.body;
-    const newProd = await manager.addProduct(body);
+    const newProd = await managerDb.addProduct(body);
 
     io.emit("newProduct", newProd);
 
