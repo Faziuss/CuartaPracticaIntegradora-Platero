@@ -1,0 +1,60 @@
+<h1>Productos</h1>
+
+<div id="productsContainer">
+  {{#each products}}
+    <div data-id={{this.id}}>
+        <li>{{this.title}}</li>
+        <li>{{this.description}}</li>
+        <li>{{this.code}}</li>
+        <li>{{this.price}}</li>
+        <li>{{this.status}}</li>
+        <li>{{this.stock}}</li>
+        <li>{{this.category}}</li>
+        <li>{{this.thumbnails}}</li>
+      <button class="delete-btn" data-deleteId={{this.id}}>Eliminar Producto</button>
+    </div>
+  {{/each}}
+</div>
+
+<h1>Agregar Producto</h1>
+
+<form id="formProduct">
+ <div>
+        <label for="title">Title</label>
+        <input type="text" name="title" id="title" required />
+      </div>
+      <div>
+        <label for="description">Description</label>
+        <input type="text" name="description" id="description" required />
+      </div>
+      <div>
+        <label for="code">Code</label>
+        <input type="text" name="code" id="code" required />
+      </div>
+      <div>
+        <label for="price">Price</label>
+        <input type="number" name="price" id="price" required />
+      </div>
+       <div>
+        <label for="status">Status</label>
+        <input type="boolean" name="status" id="status" />
+      </div>
+      <div>
+        <label for="stock">Stock</label>
+        <input type="number" name="stock" id="stock" required />
+      </div>
+       <div>
+        <label for="category">Category</label>
+        <input type="text" name="category" id="category" required />
+      </div>
+       <div>
+        <label for="thumbails">Thumbnails</label>
+        <input type="text" name="thumbnails" id="thumbnails" />
+      </div>
+  <button>Agregar Producto</button>
+</form>
+
+<link rel="stylesheet" href="/css/styles.css" />
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

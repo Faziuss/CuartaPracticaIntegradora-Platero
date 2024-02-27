@@ -1,0 +1,18 @@
+<h1>Productos</h1>
+
+<div id="productsContainer">
+        {{#each products}}
+        <div data-id={{this.id}}>
+        <li>{{this.title}}</li>
+        <li>{{this.description}}</li>
+        <li>{{this.code}}</li>
+        <li>{{this.price}}</li>
+        <li>{{this.status}}</li>
+        <li>{{this.stock}}</li>
+        <li>{{this.category}}</li>
+        <li>{{this.thumbnails}}</li>
+        </div>
+        {{/each}}
+</div>
+
+<link rel="stylesheet" href="/css/styles.css">
