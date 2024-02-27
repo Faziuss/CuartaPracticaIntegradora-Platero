@@ -2,168 +2,37 @@
 
 import ProductModel from "../models/products.model.js";
 
-class ProductsDb {
+class Products {
   constructor() {
-    console.log("new instance of dbmanager")
+    console.log("new instance of dbmanager");
   }
 
- /*  readProducts = async () => {
-    if (fs.existsSync(this.path)) {
-      const data = await fs.promises.readFile(this.path, "utf-8");
-      const products = JSON.parse(data);
-      return products;
-    } else {
-      return [];
-    }
-  }; */
-
   getProducts = async () => {
-    let products = await ProductModel.find().lean()
-    return products
+    let products = await ProductModel.find().lean();
+    return products;
   };
 
-  /* validateAddProduct = (newProd) => {
-    const allowedFields = [
-      "title",
-      "description",
-      "code",
-      "price",
-      "status",
-      "stock",
-      "category",
-      "thumbnails",
-    ];
-    const fields = Object.keys(newProd);
-    const disallowedFields = fields.filter(
-      (field) => !allowedFields.includes(field)
-    );
-
-    if (disallowedFields.length > 0) {
-      throw new AppError(400, {
-        message: `Los siguientes campos NO estan permitidos: ${disallowedFields.join(
-          ", "
-        )}`,
-      });
-    }
-
-    if (
-      !newProd.title ||
-      !newProd.description ||
-      !newProd.code ||
-      !newProd.price ||
-      !newProd.stock ||
-      !newProd.category
-    ) {
-      throw new AppError(400, {
-        message:
-          "Los campos title, description, code, price, stock, category SON OBLIGATORIOS",
-      });
-    }
-
-    if (newProd.status == undefined) {
-      newProd.status = true;
-    }
-
-    if (
-      typeof newProd.title !== "string" ||
-      typeof newProd.description !== "string" ||
-      typeof newProd.code !== "string" ||
-      isNaN(newProd.price) ||
-      typeof newProd.status !== "boolean" ||
-      isNaN(newProd.stock) ||
-      typeof newProd.category !== "string"
-    ) {
-      throw new AppError(400, {
-        message: "Algunos campos tienen un dato invalido",
-      });
-    }
-
-    newProd.id = uuidv4();
-
-    return newProd;
-  }; */
-
   addProduct = async (body) => {
-
-    let result = await ProductModel.create(body)
-    return result
+    let result = await ProductModel.create(body);
+    return result;
   };
 
   getProductById = async (id) => {
-    const products = await this.readProducts();
-    const foundProduct = products.find((product) => product.id === id);
-    return foundProduct;
-  };
-
-  validateUpdateProduct = async (upProd) => {
-    const allowedFields = [
-      "title",
-      "description",
-      "code",
-      "price",
-      "status",
-      "stock",
-      "category",
-      "thumbnails",
-    ];
-    const fields = Object.keys(upProd);
-    const disallowedFields = fields.filter(
-      (field) => !allowedFields.includes(field)
-    );
-
-    if (disallowedFields.length > 0) {
-      throw new AppError(400, {
-        message: `Los siguientes campos son inexistentes para la actualización: ${disallowedFields.join(
-          ", "
-        )}`,
-      });
-    }
+    //const products = await ProductModel.findById(id)
+    const foundProduct = await ProductModel.findOne({ _id: id });
+    //const foundProduct = products.find((product) => product._id == id);
+    return foundProduct
   };
 
   updateProduct = async (pid, upProd) => {
-    this.validateUpdateProduct(upProd);
-
-    const products = await this.readProducts();
-
-    const i = products.findIndex((product) => product.id == pid);
-
-    if (i === -1) {
-      throw new AppError(404, { message: "Producto no encontrado." });
-    }
-
-    if (upProd.code) {
-      const foundCode = products.some((p) => {
-        return p.code === upProd.code && p.id !== products[i].id;
-      });
-
-      if (foundCode) {
-        throw new AppError(404, {
-          message: "El codigo identificador ya se encuentra en uso",
-        });
-      }
-    }
-
-    products[i] = { ...products[i], ...upProd };
-
-    const json = JSON.stringify(products, null, 2);
-
-    await fs.promises.writeFile(this.path, json);
+    const product = await ProductModel.findByIdAndUpdate(pid , upProd , {new:true})
+    return product;
   };
 
   deleteProduct = async (pid) => {
-    const products = await this.readProducts();
-
-    const i = products.findIndex((product) => product.id == pid);
-
-    if (i === -1) {
-      throw new AppError(404, { error: "Producto no encontrado" });
-    }
-
-    products.splice(i, 1);
-
-    const json = JSON.stringify(products, null, 2);
-    await fs.promises.writeFile(this.path, json);
+    const product = await ProductModel.deleteOne({ _id: pid });
+    return product
   };
 }
 
-export default ProductsDb;
+export default Products;

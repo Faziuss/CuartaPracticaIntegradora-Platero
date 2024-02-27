@@ -10,7 +10,7 @@ import { errorHandler } from "./middlewares/errorHandler.js";
 import mongoose from "mongoose";
 const port = 8080;
 
-mongoose.connect(`mongodb+srv://fabriplatero88:2iVDli30FRtzgWqO@cluster-coder.urrltm6.mongodb.net/`).then(()=>{
+mongoose.connect(`mongodb+srv://fabriplatero88:2iVDli30FRtzgWqO@cluster-coder.urrltm6.mongodb.net/ecommerce`).then(()=>{
   console.log("Connected successfully")
 })
 

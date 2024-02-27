@@ -1,10 +1,10 @@
 import { Router } from "express";
-import Products from "../dao/fileManager/products.js";
-import ProductsDb from "../dao/fileManager/dbManagers/products.js";
+import ProductModel from "../dao/fileManager/models/products.model.js";
+import Products from "../dao/fileManager/dbManagers/products.js";
 import { AppError } from "../helpers/AppError.js";
+import mongoose from "mongoose";
 const router = Router();
 const manager = new Products();
-const managerDb = new ProductsDb()
 
 router.get("/", async (req, res, next) => {
   try {
@@ -14,8 +14,7 @@ router.get("/", async (req, res, next) => {
       throw new AppError(400, { message: "Invalid limit query." });
     }
 
-    //const products = await manager.readProducts();
-    const products = await managerDb.getProducts()
+    const products = await manager.getProducts();
     if (limit) {
       products = products.slice(0, parseInt(limit, 10));
     }
@@ -28,6 +27,10 @@ router.get("/", async (req, res, next) => {
 router.get("/:pid", async (req, res, next) => {
   try {
     const { pid } = req.params;
+    const isValid = mongoose.Types.ObjectId.isValid(pid);
+    if (!isValid) {
+      throw new AppError(400, { message: "El ID ingresado no es válido." });
+    }
 
     const product = await manager.getProductById(pid);
 
@@ -45,12 +48,14 @@ router.post("/", async (req, res, next) => {
   try {
     const io = req.app.get("io");
     const body = req.body;
-    const newProd = await managerDb.addProduct(body);
+    const newProd = await manager.addProduct(body);
 
     io.emit("newProduct", newProd);
 
     res.send({ status: "sucess", message: "Nuevo producto agregado" });
   } catch (error) {
+    if (error instanceof mongoose.Error.ValidationError) {
+    }
     return next(error);
   }
 });
@@ -59,10 +64,17 @@ router.put("/:pid", async (req, res, next) => {
   try {
     const upProd = req.body;
     const { pid } = req.params;
+    const isValid = mongoose.Types.ObjectId.isValid(pid);
+    if (!isValid) {
+      throw new AppError(400, { message: "El ID ingresado no es válido." });
+    }
 
-    await manager.updateProduct(pid, upProd);
+    const product = await manager.updateProduct(pid, upProd);
+    if (!product) {
+      throw new AppError(404, { message: "Producto no encontrado." });
+    }
 
-    res.send({
+    return res.send({
       status: "sucess",
       message: "Producto actualizado correctamente",
     });
@@ -75,13 +87,20 @@ router.delete("/:pid", async (req, res, next) => {
   try {
     const io = req.app.get("io");
     const { pid } = req.params;
+    const isValid = mongoose.Types.ObjectId.isValid(pid);
+    if (!isValid) {
+      throw new AppError(400, { message: "El ID ingresado no es válido." });
+    }
 
-    await manager.deleteProduct(pid);
+    const product = await manager.deleteProduct(pid);
+    if (product.deletedCount === 0) {
+      throw new AppError(404, { message: "Producto no encontrado." });
+    }
     io.emit("deleteProduct", pid);
-    res.send({
-      status: "sucess",
-      message: "Producto eliminado existosamente",
-    });
+
+    return res
+      .status(200)
+      .json({ message: "Producto eliminado exitosamente." });
   } catch (error) {
     return next(error);
   }
