@@ -1,5 +1,3 @@
-//import { AppError } from "../helpers/AppError.js";
-
 import ProductModel from "../models/products.model.js";
 
 class Products {
@@ -18,9 +16,7 @@ class Products {
   };
 
   getProductById = async (id) => {
-    //const products = await ProductModel.findById(id)
     const foundProduct = await ProductModel.findOne({ _id: id });
-    //const foundProduct = products.find((product) => product._id == id);
     return foundProduct
   };
 

@@ -1,0 +1,27 @@
+[
+  {
+    "id": "4344a593-dc21-44ec-b651-c175d1711ea2",
+    "products": [
+      {
+        "id": "5223w",
+        "quantity": 2
+      },
+      {
+        "id": "5223ws",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "f887a448-f6c4-4a1c-9b4b-1e2241fa1452",
+    "products": []
+  },
+  {
+    "id": "7dd91893-d9f1-453e-8131-a4d7e80793a6",
+    "products": []
+  },
+  {
+    "id": "7c951ab5-b4b0-4641-8462-d5b1f29a02b8",
+    "products": []
+  }
+]
