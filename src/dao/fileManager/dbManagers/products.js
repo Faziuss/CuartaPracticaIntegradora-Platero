@@ -5,8 +5,8 @@ class Products {
     console.log("new instance of dbmanager");
   }
 
-  async getProducts(ReqQuery) {
-    let { query, sort, category, status } = ReqQuery;
+  async getProductsApi(ReqQuery) {
+    let { query, sort } = ReqQuery;
     let opt = {};
 
     let limit = ReqQuery.limit || 10;
@@ -17,15 +17,6 @@ class Products {
     }
 
     console.log(typeof opt);
-    //console.log(JSON.parse(query));
-    /* 
-    if (category) {
-      opt.categoria = category;
-  }
-
-  if (status) {
-      opt.disponible = (status === 'true')
-  } */
 
     if (limit && (isNaN(limit) || Number(limit) < 0)) {
       throw new AppError(400, { message: "Invalid limit query." });
@@ -45,17 +36,13 @@ class Products {
       lean: true,
     };
 
-    console.log(
-      "TESTEO PAGE",
-      page,
-      "TESTEO LIMIT",
-      limit,
-      "TESTEO sort",
-      sort
-    );
-
     let result = await ProductModel.paginate(opt, options);
 
+    return result;
+  }
+
+  async getProducts() {
+    let result = await ProductModel.find();
     return result;
   }
 
