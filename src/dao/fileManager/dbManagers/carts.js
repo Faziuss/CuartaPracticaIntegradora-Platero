@@ -13,8 +13,10 @@ class Carts {
     return cart;
   }
 
-  async getCartById(id) {
-    const cart = await CartModel.findById(id);
+  async getCartById(cid) {
+    const cart = await CartModel.findById(cid)
+      .populate("products.product")
+
     return cart;
   }
 
@@ -38,9 +40,8 @@ class Carts {
     });
 
     if (productInCart) {
-      console.log("product in cart");
       await CartModel.updateOne(
-        { _id: cid, "products._id": productInCart._id },
+        { _id: cid, "products.product": productInCart._id },
         {
           $inc: {
             "products.$.quantity": 1,
@@ -53,7 +54,7 @@ class Carts {
         {
           $push: {
             products: {
-              id: product._id,
+              product: product._id,
               quantity: 1,
             },
           },
@@ -79,7 +80,7 @@ class Carts {
 
     const result = await CartModel.updateOne(
       { _id: cid },
-      { $pull: { products: { id: pid } } }
+      { $pull: { products: { product: pid } } }
     );
 
     console.log(result);
@@ -93,7 +94,7 @@ class Carts {
 
   async updateAllCartProducts(cid, products) {
     for (const product of products) {
-      const allowedFields = ["id", "quantity"];
+      const allowedFields = ["product", "quantity"];
       const fields = Object.keys(product);
       const disallowedFields = fields.filter(
         (field) => !allowedFields.includes(field)
@@ -137,7 +138,7 @@ class Carts {
     }
 
     const result = await CartModel.updateOne(
-      { _id: cid, "products.id": pid },
+      { _id: cid, "products.product": pid },
       { $set: { "products.$.quantity": body } }
     );
 
