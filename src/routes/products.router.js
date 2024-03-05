@@ -7,17 +7,13 @@ const manager = new Products();
 
 router.get("/", async (req, res, next) => {
   try {
-    const { limit } = req.query;
+    let products = await manager.getProducts(req.query);
 
-    if (limit && (isNaN(limit) || Number(limit) < 0)) {
-      throw new AppError(400, { message: "Invalid limit query." });
-    }
+    products.prevLink = products.hasPrevPage ? `${req.protocol}://${req.get('host')}/api/products?page=${products.prevPage}` : null;
+    products.nextLink = products.hasNextPage ? `${req.protocol}://${req.get('host')}/api/products?page=${products.nextPage}` : null;
 
-    const products = await manager.getProducts();
-    if (limit) {
-      products = products.slice(0, parseInt(limit, 10));
-    }
-    res.send({ status: "sucess", products: products });
+
+    res.send({ status: "sucess", payload: products });
   } catch (error) {
     return next(error);
   }
