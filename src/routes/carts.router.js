@@ -42,12 +42,16 @@ router.post("/:cid/product/:pid", async (req, res, next) => {
     const { cid, pid } = req.params;
     const isCartIDValid = mongoose.Types.ObjectId.isValid(cid);
     if (!isCartIDValid) {
-      throw new AppError(400, { message: "El ID del carrito ingresado no es válido." });
+      throw new AppError(400, {
+        message: "El ID del carrito ingresado no es válido.",
+      });
     }
 
     const isProductIDValid = mongoose.Types.ObjectId.isValid(pid);
     if (!isProductIDValid) {
-      throw new AppError(400, { message: "El ID del producto ingresado no es válido." });
+      throw new AppError(400, {
+        message: "El ID del producto ingresado no es válido.",
+      });
     }
 
     await manager.addProductToCart(cid, pid);
@@ -55,6 +59,104 @@ router.post("/:cid/product/:pid", async (req, res, next) => {
     res.send({
       status: "sucess",
       message: "Producto agregado exitosamente al carrito",
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+router.delete("/:cid/product/:pid", async (req, res, next) => {
+  try {
+    const { cid, pid } = req.params;
+    const isCartIDValid = mongoose.Types.ObjectId.isValid(cid);
+    if (!isCartIDValid) {
+      throw new AppError(400, {
+        message: "El ID del carrito ingresado no es válido.",
+      });
+    }
+
+    const isProductIDValid = mongoose.Types.ObjectId.isValid(pid);
+    if (!isProductIDValid) {
+      throw new AppError(400, {
+        message: "El ID del producto ingresado no es válido.",
+      });
+    }
+
+    await manager.deleteCartProduct(cid, pid);
+
+    res.send({
+      status: "sucess",
+      message: "Producto elminado exitosamente",
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+router.put("/:cid", async (req, res, next) => {
+  try {
+    const { cid } = req.params;
+
+    const isCartIDValid = mongoose.Types.ObjectId.isValid(cid);
+    if (!isCartIDValid) {
+      throw new AppError(400, {
+        message: "El ID del carrito ingresado no es válido.",
+      });
+    }
+
+    await manager.updateAllCartProducts(cid, req.body.products);
+    res.send({
+      status: "sucess",
+      message: "Productos del carrito actualizados con exito",
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+router.put("/:cid/product/:pid", async (req, res, next) => {
+  try {
+    const { cid, pid } = req.params;
+    const body = req.body.quantity;
+    console.log(body);
+    const isCartIDValid = mongoose.Types.ObjectId.isValid(cid);
+    if (!isCartIDValid) {
+      throw new AppError(400, {
+        message: "El ID del carrito ingresado no es válido.",
+      });
+    }
+
+    const isProductIDValid = mongoose.Types.ObjectId.isValid(pid);
+    if (!isProductIDValid) {
+      throw new AppError(400, {
+        message: "El ID del producto ingresado no es válido.",
+      });
+    }
+
+    await manager.updateCartProductQuantity(cid, pid, body);
+
+    res.send({
+      status: "sucess",
+      message: "Producto actualizado exitosamente",
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+router.delete("/:cid", async (req, res, next) => {
+  try {
+    const { cid } = req.params;
+    const isCartIDValid = mongoose.Types.ObjectId.isValid(cid);
+    if (!isCartIDValid) {
+      throw new AppError(400, {
+        message: "El ID del carrito ingresado no es válido.",
+      });
+    }
+    await manager.deleteAllCartProducts(cid);
+    res.send({
+      status: "sucess",
+      message: "Productos eliminados del carrito exitosamente",
     });
   } catch (error) {
     return next(error);

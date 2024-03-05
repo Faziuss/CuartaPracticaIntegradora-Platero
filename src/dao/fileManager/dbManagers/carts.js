@@ -5,20 +5,20 @@ import ProductModel from "../models/products.model.js";
 class Carts {
   constructor() {}
 
-  createCart = async () => {
+  async createCart() {
     const newCart = { products: [] };
 
     let cart = await CartModel.create(newCart);
     console.log(cart);
     return cart;
-  };
+  }
 
-  getCartById = async (id) => {
+  async getCartById(id) {
     const cart = await CartModel.findById(id);
     return cart;
-  };
+  }
 
-  addProductToCart = async (cid, pid) => {
+  async addProductToCart(cid, pid) {
     const product = await ProductModel.findById(pid);
     if (!product) {
       throw new AppError(404, {
@@ -39,11 +39,14 @@ class Carts {
 
     if (productInCart) {
       console.log("product in cart");
-      await CartModel.updateOne({_id: cid, "products._id": productInCart._id}, {
-        $inc : {
-          "products.$.quantity": 1
+      await CartModel.updateOne(
+        { _id: cid, "products._id": productInCart._id },
+        {
+          $inc: {
+            "products.$.quantity": 1,
+          },
         }
-      })
+      );
     } else {
       await CartModel.updateOne(
         { _id: cid },
@@ -57,7 +60,106 @@ class Carts {
         }
       );
     }
-  };
+  }
+
+  async deleteCartProduct(cid, pid) {
+    const product = await ProductModel.findById(pid);
+    if (!product) {
+      throw new AppError(404, {
+        message: "El producto con el ID ingresado no existe.",
+      });
+    }
+
+    const cart = await CartModel.findById(cid);
+    if (!cart) {
+      throw new AppError(404, {
+        message: "El carrito con el ID ingresado no existe.",
+      });
+    }
+
+    const result = await CartModel.updateOne(
+      { _id: cid },
+      { $pull: { products: { id: pid } } }
+    );
+
+    console.log(result);
+
+    if (result.modifiedCount === 0) {
+      throw new AppError(404, {
+        message: "Producto no encontrado en el carrito.",
+      });
+    }
+  }
+
+  async updateAllCartProducts(cid, products) {
+    for (const product of products) {
+      const allowedFields = ["id", "quantity"];
+      const fields = Object.keys(product);
+      const disallowedFields = fields.filter(
+        (field) => !allowedFields.includes(field)
+      );
+
+      if (disallowedFields.length > 0) {
+        throw new AppError(400, {
+          message: `Los siguientes campos NO están permitidos en el producto con ID ${
+            product.id
+          }: ${disallowedFields.join(", ")}`,
+        });
+      }
+    }
+    const result = await CartModel.updateOne(
+      {
+        _id: cid,
+      },
+      { $set: { products: products } }
+    );
+
+    if (result.matchedCount === 0) {
+      throw new AppError(404, {
+        message: "El ID del carrito ingresado no se encontro o no existe",
+      });
+    }
+  }
+
+  async updateCartProductQuantity(cid, pid, body) {
+    const product = await ProductModel.findById(pid);
+    if (!product) {
+      throw new AppError(404, {
+        message: "El producto con el ID ingresado no existe.",
+      });
+    }
+
+    const cart = await CartModel.findById(cid);
+    if (!cart) {
+      throw new AppError(404, {
+        message: "El carrito con el ID ingresado no existe.",
+      });
+    }
+
+    const result = await CartModel.updateOne(
+      { _id: cid, "products.id": pid },
+      { $set: { "products.$.quantity": body } }
+    );
+
+    if (result.matchedCount === 0) {
+      throw new AppError(404, {
+        message: "Producto no encontrado en el carrito.",
+      });
+    }
+  }
+
+  async deleteAllCartProducts(cid) {
+    const result = await CartModel.updateOne(
+      { _id: cid },
+      { $set: { products: [] } }
+    );
+
+    if (result.matchedCount === 0) {
+      throw new AppError(404, {
+        message: "El ID del carrito ingresado no existe",
+      });
+    }
+  }
 }
 
 export default Carts;
