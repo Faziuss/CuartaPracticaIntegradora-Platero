@@ -14,8 +14,7 @@ class Carts {
   }
 
   async getCartById(cid) {
-    const cart = await CartModel.findById(cid)
-      .populate("products.product")
+    const cart = await CartModel.findById(cid).populate("products.product");
 
     return cart;
   }
@@ -32,6 +31,13 @@ class Carts {
     if (!cart) {
       throw new AppError(404, {
         message: "El carrito con el ID ingresado no existe.",
+      });
+    }
+
+    if (product.stock <= 0) {
+      console.log("Producto sin Stock");
+      throw new AppError(404, {
+        message: "Producto sin Stock",
       });
     }
 
@@ -61,6 +67,8 @@ class Carts {
         }
       );
     }
+
+    await ProductModel.updateOne({ _id: pid }, { $inc: { stock: -1 } });
   }
 
   async deleteCartProduct(cid, pid) {
