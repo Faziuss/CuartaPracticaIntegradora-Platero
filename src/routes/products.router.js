@@ -7,13 +7,13 @@ const manager = new Products();
 
 router.get("/", async (req, res, next) => {
   try {
-    let products = await manager.getProducts(req.query);
+    let products = await manager.getProductsApi(req.query);
 
     products.prevLink = products.hasPrevPage ? `${req.protocol}://${req.get('host')}/api/products?page=${products.prevPage}` : null;
     products.nextLink = products.hasNextPage ? `${req.protocol}://${req.get('host')}/api/products?page=${products.nextPage}` : null;
 
 
-    res.send({ status: "sucess", payload: products });
+    res.send({ status: "sucess", products });
   } catch (error) {
     return next(error);
   }
