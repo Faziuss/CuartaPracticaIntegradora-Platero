@@ -42,12 +42,12 @@ class Carts {
     }
 
     const productInCart = cart.products.find((p) => {
-      return p.id === pid;
+      return p.product.toString() == pid;
     });
 
     if (productInCart) {
       await CartModel.updateOne(
-        { _id: cid, "products.product": productInCart._id },
+        { _id: cid, "products.product": productInCart.product },
         {
           $inc: {
             "products.$.quantity": 1,
