@@ -16,8 +16,6 @@ class Products {
       opt = JSON.parse(query);
     }
 
-    console.log(typeof opt);
-
     if (limit && (isNaN(limit) || Number(limit) < 0)) {
       throw new AppError(400, { message: "Invalid limit query." });
     }

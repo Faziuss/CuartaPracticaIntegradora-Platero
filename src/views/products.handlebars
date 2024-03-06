@@ -1,0 +1,29 @@
+<h1>Productos</h1>
+
+<div id="productsContainer">
+        {{#each products}}
+        <div data-id={{this._id}}></div>
+        <li>Titulo: {{this.title}}</li>
+        <li>Descripcion: {{this.description}}</li>
+        <li>Codigo: {{this.code}}</li>
+        <li>Precio: {{this.price}}</li>
+        <li>Status: {{this.status}}</li>
+        <li>Stock: {{this.stock}}</li>
+        <li>Categoria: {{this.category}}</li>
+        <li>Miniaturas: {{this.thumbnails}}</li>
+        <br>
+        </div>
+        {{/each}}
+</div>
+
+<p>{{hasPrevPage}} test</p>
+
+{{#if hasNextPage}}
+    <a href="/products?page={{nextPage}}">Siguiente</a>
+{{/if}}
+
+{{#if hasPrevPage}}
+    <a href="/products?page={{prevPage}}">Anterior</a>
+{{/if}}
+
+<link rel="stylesheet" href="/css/styles.css">
