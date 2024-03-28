@@ -9,8 +9,8 @@ d.addEventListener("click", async (e) => {
 
         const pid = e.target.dataset.btnid
     
-        const cid = "65e75ec0b31246f61082cb5f"
-    
+        const cid = e.target.dataset.cartid
+
         await axios.post(`/api/carts/${cid}/product/${pid}`);
         console.log("Producto agregado al carrito exitosamente");
         }

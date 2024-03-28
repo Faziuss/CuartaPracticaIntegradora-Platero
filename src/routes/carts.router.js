@@ -54,6 +54,10 @@ router.post("/:cid/product/:pid", async (req, res, next) => {
       });
     }
 
+    if(req.session.user.cart !== cid){
+      throw new AppError(400, {message: "El carrito que intentas modificar no coincide con el id del carrito del usuario"})
+    }
+
     await manager.addProductToCart(cid, pid);
 
     res.send({

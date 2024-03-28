@@ -33,6 +33,7 @@ sessionRouter.post(
       email: user.email,
       age: user.age,
       roles: user.roles,
+      cart: user.cart
     };
     res.status(201).send({
       status: "sucess",
@@ -63,6 +64,7 @@ sessionRouter.get(
       email: user.email,
       age: user.age,
       roles: user.roles,
+      cart: user.cart
     };
     res.redirect("/products");
   }

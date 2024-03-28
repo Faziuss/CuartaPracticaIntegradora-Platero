@@ -23,7 +23,7 @@
         <li>Stock: {{this.stock}}</li>
         <li>Categoria: {{this.category}}</li>
         <li>Miniaturas: {{this.thumbnails}}</li>
-        <button id="addProductToCartBtn" data-btnId={{this._id}}>Agregar Al Carrito</button>
+        <button id="addProductToCartBtn" data-cartId="{{../user.cart}}" data-btnId="{{this._id}}">Agregar Al Carrito</button>
         </div>
         {{/each}}
 </div>
