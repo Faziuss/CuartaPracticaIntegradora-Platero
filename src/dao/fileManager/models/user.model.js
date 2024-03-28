@@ -3,7 +3,10 @@ import mongoose, {Schema} from "mongoose";
 const userSchema = new mongoose.Schema({
   first_name: String,
   last_name: String,
-  email: String,
+  email: {
+    type: String, 
+    unique:true
+  },
   age: Number,
   password: String,
   roles: {
@@ -13,7 +16,6 @@ const userSchema = new mongoose.Schema({
   cart: {
       type: Schema.Types.ObjectId,
       ref: "carts",
-      required: true,
     }
   });
 
