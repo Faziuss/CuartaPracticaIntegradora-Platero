@@ -1,10 +1,17 @@
 import { Router } from "express";
-import userModel from "../dao/fileManager/models/user.model.js";
 import { AppError } from "../helpers/AppError.js";
 import passport from "passport";
-import { createHash, isValidPassword } from "../utils.js";
 
 const sessionRouter = Router();
+
+const privateAcess = (req, res, next) => {
+  if (!req.session.user) {
+    console.log("not logged in");
+    return res.redirect("/login");
+  }
+
+  next();
+};
 
 sessionRouter.post(
   "/register",
@@ -33,7 +40,7 @@ sessionRouter.post(
       email: user.email,
       age: user.age,
       roles: user.roles,
-      cart: user.cart
+      cart: user.cart,
     };
     res.status(201).send({
       status: "sucess",
@@ -64,7 +71,7 @@ sessionRouter.get(
       email: user.email,
       age: user.age,
       roles: user.roles,
-      cart: user.cart
+      cart: user.cart,
     };
     res.redirect("/products");
   }
@@ -78,6 +85,10 @@ sessionRouter.get("/logout", async (req, res) => {
       });
   });
   res.redirect("/login");
+});
+
+sessionRouter.get("/current", privateAcess, async (req, res) => {
+   res.send({user: req.session.user})
 });
 
 export default sessionRouter;
