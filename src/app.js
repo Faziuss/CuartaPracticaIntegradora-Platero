@@ -15,8 +15,7 @@ import "dotenv/config";
 import sessionRouter from "./routes/sessions.router.js";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js"
-import { mongoConnectionLink, sessionSecret} from "./config/config.js";
-const port = 8080;
+import { mongoConnectionLink, sessionSecret, port} from "./config/config.js";
 
 mongoose
   .connect(mongoConnectionLink)
