@@ -15,12 +15,11 @@ import "dotenv/config";
 import sessionRouter from "./routes/sessions.router.js";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js"
+import { mongoConnectionLink, sessionSecret} from "./config/config.js";
 const port = 8080;
 
 mongoose
-  .connect(
-    `mongodb+srv://fabriplatero88:${process.env.MONGO_PASSWORD}@cluster-coder.urrltm6.mongodb.net/ecommerce`
-  )
+  .connect(mongoConnectionLink)
   .then(() => {
     console.log("Connected successfully");
   });
@@ -29,11 +28,11 @@ const app = express();
 
 app.use(
   session({
-    secret: "ourNewSecret",
+    secret: sessionSecret,
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      mongoUrl: `mongodb+srv://fabriplatero88:${process.env.MONGO_PASSWORD}@cluster-coder.urrltm6.mongodb.net/ecommerce`,
+      mongoUrl: mongoConnectionLink,
       ttl: 3600,
     }),
   })
