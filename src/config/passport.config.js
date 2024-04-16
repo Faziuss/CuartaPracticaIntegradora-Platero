@@ -4,7 +4,7 @@ import userModel from "../dao/fileManager/models/user.model.js";
 import { createHash, isValidPassword } from "../utils.js";
 import GithubStrategy from "passport-github2";
 import Carts from "../dao/fileManager/dbManagers/carts.js";
-import { githubStrategy } from "./config.js";
+import { githubClientId, githubClientSecret } from "./config.js";
 
 const manager = new Carts()
 
@@ -14,7 +14,11 @@ const initializePassport = () => {
   passport.use(
     "github",
     new GithubStrategy(
-      githubStrategy,
+      {
+        clientID: githubClientId,
+        clientSecret: githubClientSecret,
+        callbackURL: "http://localhost:8080/api/sessions/githubcallback",
+      },
       async (_accessToken, _refreshToken, profile, done) => {
         try {
           console.log(profile);
