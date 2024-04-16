@@ -6,6 +6,10 @@ class ProductService {
       this.dao = new Products();
     }
 
+    async getProducts(){
+        return await this.dao.getProducts()
+    }
+
     async getProductsApi(query){
         return await this.dao.getProductsApi(query);
     }
