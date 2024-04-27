@@ -13,7 +13,7 @@ router.get(
   ViewsController.getRealTimeProducts
 );
 
-router.get("/chat", privateAcess, ViewsController.chat);
+router.get("/chat", roleUser, privateAcess, ViewsController.chat);
 
 router.get("/products", privateAcess, ViewsController.getProducts);
 

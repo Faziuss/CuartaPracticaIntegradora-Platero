@@ -1,5 +1,6 @@
 import { Router } from "express";
 import CartsController from "../controllers/carts.controller.js";
+import { roleUser } from "../middlewares/roleAcess.js";
 
 const router = Router();
 
@@ -7,7 +8,7 @@ router.post("/", CartsController.createCart);
 
 router.get("/:cid", CartsController.getCartById);
 
-router.post("/:cid/product/:pid", CartsController.addProductToCart);
+router.post("/:cid/product/:pid", roleUser, CartsController.addProductToCart);
 
 router.delete("/:cid/product/:pid", CartsController.deleteCartProduct);
 
