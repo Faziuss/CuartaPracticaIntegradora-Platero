@@ -1,15 +1,16 @@
-import { AppError } from "../helpers/AppError.js"
+import { AppError } from "../helpers/AppError.js";
+import UserDTO from "../dao/DTOs/userDTO.js";
 
 class SessionsController {
-    static async register(req,res){
-        res.status(201).send({ status: "sucess", message: "Usuario Registrado"})
-    }
+  static async register(req, res) {
+    res.status(201).send({ status: "sucess", message: "Usuario Registrado" });
+  }
 
-    static async registerFail(req,res){
-        throw new AppError(401, { message: "Authentication Error" })
-    }
+  static async registerFail(req, res) {
+    throw new AppError(401, { message: "Authentication Error" });
+  }
 
-    static async login(req,res){
+  static async login(req, res) {
     const user = req.user;
 
     req.session.user = {
@@ -24,13 +25,13 @@ class SessionsController {
       payload: req.session.user,
       message: "Logeado Correctamente",
     });
-    }
+  }
 
-    static async loginFail(req,res){
-        res.status(401).send({ status: "error", error: "login fail" });
-    }
+  static async loginFail(req, res) {
+    res.status(401).send({ status: "error", error: "login fail" });
+  }
 
-    static async githubCallback(req,res){
+  static async githubCallback(req, res) {
     const user = req.user;
 
     req.session.user = {
@@ -41,21 +42,23 @@ class SessionsController {
       cart: user.cart,
     };
     res.redirect("/products");
-    }
+  }
 
-    static async logOut(req,res){
-        req.session.destroy((err) => {
-            if (err)
-              throw new AppError(500, {
-                message: "Hubo un error al intentar destruir la session",
-              });
-          });
-          res.redirect("/login");
-    }
+  static async logOut(req, res) {
+    req.session.destroy((err) => {
+      if (err)
+        throw new AppError(500, {
+          message: "Hubo un error al intentar destruir la session",
+        });
+    });
+    res.redirect("/login");
+  }
 
-    static async current(req,res){
-        res.send({user: req.session.user})
-    }
+  static async current(req, res) {
+    const user = req.session.user;
+    const userDTO = new UserDTO(user);
+    res.send({ user: userDTO });
+  }
 }
 
-export default SessionsController
+export default SessionsController;

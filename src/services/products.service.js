@@ -1,9 +1,8 @@
-import Products from "../dao/fileManager/mongo/products.mongo.js";
 import { AppError } from "../helpers/AppError.js";
 
 class ProductService {
-  constructor() {
-    this.dao = new Products();
+  constructor(dao) {
+    this.dao = dao
   }
 
   async getProducts() {

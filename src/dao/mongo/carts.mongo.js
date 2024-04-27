@@ -1,4 +1,4 @@
-import { AppError } from "../../../helpers/AppError.js";
+import { AppError } from "../../helpers/AppError.js";
 import CartModel from "./models/carts.model.js";
 import ProductModel from "./models/products.model.js";
 
