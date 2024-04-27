@@ -10,18 +10,16 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import mongoose from "mongoose";
-import ChatModel from "./dao/fileManager/models/chat.model.js";
+import ChatModel from "./dao/mongo/models/chat.model.js";
 import "dotenv/config";
 import sessionRouter from "./routes/sessions.router.js";
 import passport from "passport";
-import initializePassport from "./config/passport.config.js"
-import { mongoConnectionLink, sessionSecret, port} from "./config/config.js";
+import initializePassport from "./config/passport.config.js";
+import { mongoConnectionLink, sessionSecret, port } from "./config/config.js";
 
-mongoose
-  .connect(mongoConnectionLink)
-  .then(() => {
-    console.log("Connected successfully");
-  });
+mongoose.connect(mongoConnectionLink).then(() => {
+  console.log("Connected successfully");
+});
 
 const app = express();
 
@@ -37,9 +35,9 @@ app.use(
   })
 );
 
-initializePassport()
-app.use(passport.initialize())
-app.use(passport.session())
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -56,7 +54,7 @@ app.use(express.static(`${__dirname}/dao`));
 
 app.use("/api/carts", cartsRouter);
 app.use("/api/products", productsRouter);
-app.use('/api/sessions', sessionRouter)
+app.use("/api/sessions", sessionRouter);
 app.use("/", viewsRouter);
 app.use(errorHandler);
 

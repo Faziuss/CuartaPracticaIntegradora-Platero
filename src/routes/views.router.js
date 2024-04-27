@@ -2,6 +2,7 @@ import { Router } from "express";
 import publicAccess from "../middlewares/publicAcess.js";
 import privateAcess from "../middlewares/privateAcess.js";
 import ViewsController from "../controllers/views.controller.js";
+import { roleUser } from "../middlewares/roleAcess.js";
 
 const router = Router();
 

@@ -1,4 +1,4 @@
-import { AppError } from "../helpers/AppError";
+import { AppError } from "../helpers/AppError.js";
 
 export const roleAdmin = (req,res, next) => {
     const user = req.sessions.user
