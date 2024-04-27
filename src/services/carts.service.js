@@ -1,8 +1,6 @@
-import Carts from "../dao/fileManager/dbManagers/carts.js";
-
 class CartService {
-  constructor() {
-    this.dao = new Carts();
+  constructor(dao) {
+    this.dao = dao
   }
 
   async createCart() {

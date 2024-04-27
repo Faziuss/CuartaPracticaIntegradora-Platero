@@ -1,8 +1,6 @@
-import ProductService from "../services/products.service.js"
+import { productService } from "../repositories/index.js";
 import mongoose from "mongoose";
 import { AppError } from "../helpers/AppError.js";
-
-const productService = new ProductService()
 
 class ProductsController{
     static async getProductsApi(req,res,next){

@@ -1,9 +1,7 @@
 import mongoose from "mongoose";
-import CartService from "../services/carts.service.js";
+import { cartService } from "../repositories/index.js";
 import { AppError } from "../helpers/AppError.js";
 mongoose;
-
-const cartService = new CartService();
 
 class CartsController {
   static async createCart(req, res, next) {
