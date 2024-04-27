@@ -1,5 +1,8 @@
 {{#if user}}
 <h2>Bienvenido</h2>
+<a href="carts/{{user.cart}}">
+    <button id="goToCart">Ir al Carrito</button>
+</a>
     <div>
         <li>{{user.name}}</li>
         <li>{{user.email}}</li>

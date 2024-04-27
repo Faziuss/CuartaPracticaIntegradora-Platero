@@ -32,6 +32,9 @@ class CartService {
   async deleteAllCartProducts(cid) {
     await this.dao.deleteAllCartProducts(cid);
   }
+  async purchase(cid, email){
+    await this.dao.purchase(cid, email)
+  }
 }
 
 export default CartService;

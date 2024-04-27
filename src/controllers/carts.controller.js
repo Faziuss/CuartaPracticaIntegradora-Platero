@@ -158,6 +158,18 @@ class CartsController {
       return next(error);
     }
   }
+
+  static async purchase(req,res){
+    const {cid} = req.params;
+    const user = req.session.user
+    try {
+      const cartState = await cartService.purchase(cid, user.email)
+
+      res.send({status:'sucess', payload: cartState})
+    } catch (error) {
+      return next(error)
+    }
+  }
 }
 
 export default CartsController;

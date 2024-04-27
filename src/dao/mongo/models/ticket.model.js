@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const ticketSchema = new mongoose.Schema({
+const TicketSchema = new mongoose.Schema({
   code: {
     type: String,
     unique: true,
@@ -18,5 +18,5 @@ const ticketSchema = new mongoose.Schema({
   purchaser: { type: String, required: true },
 });
 
-const ticketModel = mongoose.model("ticket", ticketSchema)
-export default ticketModel
+const TicketModel = mongoose.model("ticket", TicketSchema)
+export default TicketModel

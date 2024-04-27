@@ -67,8 +67,6 @@ class Carts {
         }
       );
     }
-
-    //await ProductModel.updateOne({ _id: pid }, { $inc: { stock: -1 } });
   }
 
   async deleteCartProduct(cid, pid) {
@@ -168,6 +166,41 @@ class Carts {
         message: "El ID del carrito ingresado no existe",
       });
     }
+  }
+
+  async purchase(cid, email) {
+    const cart = await CartModel.findById(cid);
+    const cartProducts = cart.products;
+    const totalAmount = 0;
+    const remainProducts = [];
+    cartProducts.forEach(async (p) => {
+      if (p.product.stock <= p.quantity) {
+        await ProductModel.updateOne(
+          { _id: p.product._id },
+          { $inc: { stock: -p.product.stock } }
+        );
+        const result = await CartModel.updateOne(
+          { _id: cid },
+          { $pull: { products: { product: p.product._Id } } }
+        );
+
+        console.log(result);
+
+        if (result.modifiedCount === 0) {
+          throw new AppError(404, {
+            message: "Producto no encontrado en el carrito.",
+          });
+        }
+        totalAmount += p.quantity * p.product.price;
+      } else {
+        remainProducts.push(p.product._id);
+      }
+
+      if (totalAmount > 0) {
+        await this.ticketService.generate(email, totalAmount);
+      }
+      return remainProducts;
+    });
   }
 }
 
