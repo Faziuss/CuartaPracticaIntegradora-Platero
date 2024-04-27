@@ -1,6 +1,7 @@
 class CartService {
   constructor(dao) {
-    this.dao = dao
+    console.log(dao);
+    this.dao = dao;
   }
 
   async createCart() {

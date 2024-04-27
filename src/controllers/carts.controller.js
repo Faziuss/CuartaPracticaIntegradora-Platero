@@ -140,7 +140,7 @@ class CartsController {
       return next(error);
     }
   }
-  static async deleterAllCartProducts(req, res, next) {
+  static async deleteAllCartProducts(req, res, next) {
     try {
       const { cid } = req.params;
       const isCartIDValid = mongoose.Types.ObjectId.isValid(cid);

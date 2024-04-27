@@ -68,7 +68,7 @@ class Carts {
       );
     }
 
-    await ProductModel.updateOne({ _id: pid }, { $inc: { stock: -1 } });
+    //await ProductModel.updateOne({ _id: pid }, { $inc: { stock: -1 } });
   }
 
   async deleteCartProduct(cid, pid) {
