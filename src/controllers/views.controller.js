@@ -1,4 +1,4 @@
-import { productService, cartService } from "../repositories/index.js";
+import { productService, cartService, ticketService} from "../repositories/index.js";
 
 class ViewsController {
   static async getHomeProducts(_req, res) {
@@ -31,11 +31,19 @@ class ViewsController {
   static async getCart(req, res) {
     const { cid } = req.params;
 
-    const result = await cartService.getCartById(cid);
+    const cart = await cartService.getCartById(cid)
+  
+    return res.render("carts", {cart});
+  }
 
-    const carts = result.products;
+  static async getTicketByEmail(req,res){
+      const email = req.session.user.email
+      const tickets = await ticketService.getTicketByEmail(email)
 
-    return res.render("carts", { carts: carts.map((item) => item.toJSON()) });
+      console.log("email", email, "tickets", tickets)
+
+      return res.render("tickets", {tickets})
+
   }
   static async register(_req, res) {
     res.render("register");

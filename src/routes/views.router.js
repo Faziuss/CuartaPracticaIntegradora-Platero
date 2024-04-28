@@ -20,6 +20,8 @@ router.get("/products", privateAcess, ViewsController.getProducts);
 
 router.get("/carts/:cid", privateAcess, ViewsController.getCart);
 
+router.get("/tickets", privateAcess, ViewsController.getTicketByEmail)
+
 router.get("/register", publicAccess, ViewsController.register);
 
 router.get("/login", publicAccess, ViewsController.login);

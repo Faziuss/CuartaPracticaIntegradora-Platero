@@ -1,0 +1,10 @@
+<h1>Historial de Tickets</h1>
+
+ {{#each tickets}}
+    <div id="ticket">
+        <li>Codigo: {{this.code}}</li>
+        <li>Horario de compra: {{this.purchase_datetime}}</li>
+        <li>Total: ${{this.amount}}</li>
+        <br>
+    </div>
+{{/each}}

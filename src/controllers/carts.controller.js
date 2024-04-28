@@ -159,15 +159,17 @@ class CartsController {
     }
   }
 
-  static async purchase(req,res){
-    const {cid} = req.params;
-    const user = req.session.user
+  static async purchase(req, res, next) {
+    const { cid } = req.params;
+    const user = req.session.user;
+    console.log("testeo purchase");
     try {
-      const cartState = await cartService.purchase(cid, user.email)
+      const cartState = await cartService.purchase(cid, user.email);
 
-      res.send({status:'sucess', payload: cartState})
+      console.log("cartState", cartState);
+      res.send({ status: "sucess", payload: cartState });
     } catch (error) {
-      return next(error)
+      return next(error);
     }
   }
 }

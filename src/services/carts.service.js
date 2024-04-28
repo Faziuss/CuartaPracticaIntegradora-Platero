@@ -33,7 +33,7 @@ class CartService {
     await this.dao.deleteAllCartProducts(cid);
   }
   async purchase(cid, email){
-    await this.dao.purchase(cid, email)
+    return await this.dao.purchase(cid, email)
   }
 }
 

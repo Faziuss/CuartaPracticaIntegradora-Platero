@@ -13,6 +13,11 @@ class Ticket{
         await TicketModel.create(ticket)
     }
 
+    async getTicketByEmail(email){
+        const ticket = TicketModel.find({purchaser: email}).lean()
+        return ticket
+    }
+
 }
 
 export default Ticket

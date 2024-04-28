@@ -1,6 +1,7 @@
 import { AppError } from "../../helpers/AppError.js";
 import CartModel from "./models/carts.model.js";
 import ProductModel from "./models/products.model.js";
+import { ticketService } from "../../repositories/index.js";
 
 class Carts {
   constructor() {}
@@ -14,7 +15,9 @@ class Carts {
   }
 
   async getCartById(cid) {
-    const cart = await CartModel.findById(cid).populate("products.product");
+    const cart = await CartModel.findById(cid)
+      .populate("products.product")
+      .lean();
 
     return cart;
   }
@@ -169,39 +172,41 @@ class Carts {
   }
 
   async purchase(cid, email) {
-    const cart = await CartModel.findById(cid);
+    const cart = await CartModel.findById(cid).populate("products.product");
+    if (!cart) {
+      throw new AppError(404, {
+        message: "El carrito con el ID ingresado no existe.",
+      });
+    }
     const cartProducts = cart.products;
-    const totalAmount = 0;
+    let totalAmount = 0;
     const remainProducts = [];
-    cartProducts.forEach(async (p) => {
-      if (p.product.stock <= p.quantity) {
-        await ProductModel.updateOne(
+    for (const p of cartProducts) {
+      if (p.product.stock >= p.quantity) {
+        const result1 = await ProductModel.updateOne(
           { _id: p.product._id },
-          { $inc: { stock: -p.product.stock } }
+          { $inc: { stock: -p.quantity } }
         );
-        const result = await CartModel.updateOne(
+        const result2 = await CartModel.updateOne(
           { _id: cid },
-          { $pull: { products: { product: p.product._Id } } }
+          { $pull: { products: { product: p.product._id } } }
         );
 
-        console.log(result);
-
-        if (result.modifiedCount === 0) {
+        if (result2.modifiedCount === 0) {
           throw new AppError(404, {
             message: "Producto no encontrado en el carrito.",
           });
         }
-        totalAmount += p.quantity * p.product.price;
+        totalAmount = totalAmount + (p.quantity * p.product.price)
       } else {
         remainProducts.push(p.product._id);
       }
-
-      if (totalAmount > 0) {
-        await this.ticketService.generate(email, totalAmount);
-      }
-      return remainProducts;
-    });
+    }
+    if (totalAmount > 0) {
+      await ticketService.generate(email, totalAmount);
+    }
+    console.log("finished", remainProducts)
+    return remainProducts;
   }
 }
-
 export default Carts;
