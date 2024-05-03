@@ -1,4 +1,5 @@
 import ProductModel from "./models/products.model.js";
+import { AppError } from "../../helpers/AppError.js";
 
 class Products {
   constructor() {
@@ -51,19 +52,28 @@ class Products {
 
   async getProductById(id) {
     const foundProduct = await ProductModel.findOne({ _id: id });
+
+    if (!foundProduct) {
+      throw new AppError(404, { message: "Producto no Encontrado" });
+    }
     return foundProduct;
   }
 
   async updateProduct(pid, upProd) {
-    const product = await ProductModel.findByIdAndUpdate(pid, upProd, {
+    const result = await ProductModel.findByIdAndUpdate(pid, upProd, {
       new: true,
     });
-    return product;
+
+    if (result === null) {
+      throw new AppError(404, { message: "Producto no encontrado." });
+    }
   }
 
   async deleteProduct(pid) {
     const product = await ProductModel.deleteOne({ _id: pid });
-    return product;
+    if (product.deletedCount === 0) {
+      throw new AppError(404, { message: "Producto no encontrado." });
+    }
   }
 }
 

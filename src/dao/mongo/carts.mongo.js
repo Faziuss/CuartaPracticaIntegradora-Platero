@@ -18,7 +18,9 @@ class Carts {
     const cart = await CartModel.findById(cid)
       .populate("products.product")
       .lean();
-
+    if (!cart) {
+      throw new AppError(404, { message: "Carrito no encontrado" });
+    }
     return cart;
   }
 
@@ -197,7 +199,7 @@ class Carts {
             message: "Producto no encontrado en el carrito.",
           });
         }
-        totalAmount = totalAmount + (p.quantity * p.product.price)
+        totalAmount = totalAmount + p.quantity * p.product.price;
       } else {
         remainProducts.push(p.product._id);
       }
@@ -205,7 +207,7 @@ class Carts {
     if (totalAmount > 0) {
       await ticketService.generate(email, totalAmount);
     }
-    console.log("finished", remainProducts)
+    console.log("finished", remainProducts);
     return remainProducts;
   }
 }
