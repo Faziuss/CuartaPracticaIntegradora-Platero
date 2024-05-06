@@ -1,5 +1,8 @@
 import ProductModel from "./models/products.model.js";
 import { AppError } from "../../helpers/AppError.js";
+import CustomError from "../../utils/CustomError.js";
+import { getInvalidIdInfo } from "../../utils/info.js";
+import ErrorTypes from "../../utils/ErrorTypes.js";
 
 class Products {
   constructor() {
@@ -54,7 +57,12 @@ class Products {
     const foundProduct = await ProductModel.findOne({ _id: id });
 
     if (!foundProduct) {
-      throw new AppError(404, { message: "Producto no Encontrado" });
+      throw new CustomError({
+        name: 'Unexisting id param error',
+        cause: getInvalidIdInfo(id),
+        message: 'No se encontró el Producto.',
+        code: ErrorTypes.INVALID_ID_ERROR
+    })
     }
     return foundProduct;
   }
@@ -65,14 +73,24 @@ class Products {
     });
 
     if (result === null) {
-      throw new AppError(404, { message: "Producto no encontrado." });
+      throw new CustomError({
+        name: 'Unexisting id param error',
+        cause: getInvalidIdInfo(pid),
+        message: 'No se encontró el Producto.',
+        code: ErrorTypes.INVALID_ID_ERROR
+    })
     }
   }
 
   async deleteProduct(pid) {
     const product = await ProductModel.deleteOne({ _id: pid });
     if (product.deletedCount === 0) {
-      throw new AppError(404, { message: "Producto no encontrado." });
+      throw new CustomError({
+        name: 'Unexisting id param error',
+        cause: getInvalidIdInfo(pid),
+        message: 'No se encontró el Producto.',
+        code: ErrorTypes.INVALID_ID_ERROR
+    })
     }
   }
 }

@@ -1,6 +1,9 @@
 import { productService } from "../repositories/index.js";
 import mongoose from "mongoose";
 import { AppError } from "../helpers/AppError.js";
+import CustomError from "../utils/CustomError.js";
+import { getInvalidIdTypeInfo } from "../utils/info.js";
+import ErrorTypes from "../utils/ErrorTypes.js";
 
 class ProductsController {
   static async getProductsApi(req, res, next) {
@@ -28,7 +31,12 @@ class ProductsController {
       const { pid } = req.params;
       const isValid = mongoose.Types.ObjectId.isValid(pid);
       if (!isValid) {
-        throw new AppError(400, { message: "El ID ingresado no es válido." });
+        throw new CustomError({
+          name: 'Invalid id type error',
+          cause: getInvalidIdTypeInfo(pid),
+          message: 'El tipo de ID ingresado no es valido',
+          code: ErrorTypes.INVALID_ID_TYPE_ERROR
+      })
       }
 
       const product = await productService.getProductById(pid);
@@ -48,7 +56,7 @@ class ProductsController {
 
       res.send({ status: "sucess", message: "Nuevo producto agregado" });
     } catch (error) {
-      if (error instanceof mongoose.Error.ValidationError) {
+      if (error instanceof mongoose.Error.ValidationError){
       }
       return next(error);
     }
@@ -59,7 +67,12 @@ class ProductsController {
       const { pid } = req.params;
       const isValid = mongoose.Types.ObjectId.isValid(pid);
       if (!isValid) {
-        throw new AppError(400, { message: "El ID ingresado no es válido." });
+        throw new CustomError({
+          name: 'Invalid id type error',
+          cause: getInvalidIdTypeInfo(pid),
+          message: 'El tipo de ID ingresado no es valido',
+          code: ErrorTypes.INVALID_ID_TYPE_ERROR
+      })
       }
 
       await productService.updateProduct(pid, upProd);
@@ -78,7 +91,12 @@ class ProductsController {
       const { pid } = req.params;
       const isValid = mongoose.Types.ObjectId.isValid(pid);
       if (!isValid) {
-        throw new AppError(400, { message: "El ID ingresado no es válido." });
+        throw new CustomError({
+          name: 'Invalid id type error',
+          cause: getInvalidIdTypeInfo(pid),
+          message: 'El tipo de ID ingresado no es valido',
+          code: ErrorTypes.INVALID_ID_TYPE_ERROR
+      })
       }
 
       await productService.deleteProduct(pid);
