@@ -23,6 +23,8 @@ mongoose.connect(mongoConnectionLink).then(() => {
 
 const app = express();
 
+app.use()
+
 app.use(
   session({
     secret: sessionSecret,
