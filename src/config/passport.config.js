@@ -21,7 +21,6 @@ const initializePassport = () => {
       },
       async (_accessToken, _refreshToken, profile, done) => {
         try {
-          console.log(profile);
           let user = await userModel.findOne({ email: profile._json.email });
           if (!user) {
             const newCart = await manager.createCart();

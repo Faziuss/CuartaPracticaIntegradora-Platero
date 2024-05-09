@@ -6,6 +6,7 @@ import MongoStore from "connect-mongo";
 import cartsRouter from "./routes/carts.router.js";
 import productsRouter from "./routes/products.router.js";
 import viewsRouter from "./routes/views.router.js";
+import testLoggerRouter from "./routes/loggerTest.router.js"
 import path from "path";
 import { fileURLToPath } from "url";
 import { errorHandler } from "./middlewares/errorHandler.js";
@@ -58,6 +59,7 @@ app.use(express.static(`${__dirname}/dao`));
 app.use("/api/carts", cartsRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/sessions", sessionRouter);
+app.use("/loggerTest", testLoggerRouter)
 app.use("/", viewsRouter);
 app.use(errorHandler);
 
