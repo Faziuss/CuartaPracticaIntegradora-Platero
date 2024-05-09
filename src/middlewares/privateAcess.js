@@ -1,6 +1,6 @@
 const privateAcess = (req, res, next) => {
     if (!req.session.user) {
-      console.log("not logged in");
+      req.logger.info("Must be Logged In.")
       return res.redirect("/login");
     }
     next();
