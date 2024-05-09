@@ -2,6 +2,9 @@ import mongoose from "mongoose";
 import { cartService } from "../repositories/index.js";
 import { AppError } from "../helpers/AppError.js";
 mongoose;
+import CustomError from "../utils/CustomError.js";
+import { getInvalidIdTypeInfo } from "../utils/info.js";
+import ErrorTypes from "../utils/ErrorTypes.js";
 
 class CartsController {
   static async createCart(req, res, next) {
@@ -22,7 +25,12 @@ class CartsController {
       const { cid } = req.params;
       const isValid = mongoose.Types.ObjectId.isValid(cid);
       if (!isValid) {
-        throw new AppError(400, { message: "El ID ingresado no es válido." });
+        throw new CustomError({
+          name: 'Invalid id type error',
+          cause: getInvalidIdTypeInfo(pid),
+          message: 'El tipo de ID de carrito ingresado no es valido',
+          code: ErrorTypes.INVALID_ID_TYPE_ERROR
+      })
       }
       const cart = await cartService.getCartById(cid);
       res.send({ status: "sucess", cart });
@@ -35,16 +43,22 @@ class CartsController {
       const { cid, pid } = req.params;
       const isCartIDValid = mongoose.Types.ObjectId.isValid(cid);
       if (!isCartIDValid) {
-        throw new AppError(400, {
-          message: "El ID del carrito ingresado no es válido.",
-        });
+        throw new CustomError({
+          name: 'Invalid id type error',
+          cause: getInvalidIdTypeInfo(pid),
+          message: 'El tipo de ID de carrito ingresado no es valido',
+          code: ErrorTypes.INVALID_ID_TYPE_ERROR
+      })
       }
 
       const isProductIDValid = mongoose.Types.ObjectId.isValid(pid);
       if (!isProductIDValid) {
-        throw new AppError(400, {
-          message: "El ID del producto ingresado no es válido.",
-        });
+        throw new CustomError({
+          name: 'Invalid id type error',
+          cause: getInvalidIdTypeInfo(pid),
+          message: 'El tipo de ID de producto ingresado no es valido',
+          code: ErrorTypes.INVALID_ID_TYPE_ERROR
+      })
       }
 
       if (req.session.user.cart !== cid) {

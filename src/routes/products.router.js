@@ -22,11 +22,11 @@ router.get("/mockingproducts", (_req,res)=>{
 
 router.get("/:pid", ProductsController.getProductById);
 
-router.post("/", roleAdmin, ProductsController.addProduct);
+router.post("/", ProductsController.addProduct);
 
-router.put("/:pid", roleAdmin, ProductsController.updateProduct);
+router.put("/:pid", ProductsController.updateProduct);
 
-router.delete("/:pid", roleAdmin, ProductsController.deleteProduct);
+router.delete("/:pid", ProductsController.deleteProduct);
 
 
 export default router;
