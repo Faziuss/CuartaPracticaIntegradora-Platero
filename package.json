@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon/src/app.js"
+    "dev": "set NODE_ENV=development& nodemon/src/app.js",
+    "pord": "set NODE_ENV=production& nodemon/src/app.js"
   },
   "keywords": [],
   "author": "",

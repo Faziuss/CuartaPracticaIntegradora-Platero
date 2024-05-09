@@ -16,6 +16,7 @@ import sessionRouter from "./routes/sessions.router.js";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 import { mongoConnectionLink, sessionSecret, port } from "./config/config.js";
+import addLogger from "./middlewares/addLogger.middleware.js";
 
 mongoose.connect(mongoConnectionLink).then(() => {
   console.log("Connected successfully");
@@ -23,7 +24,7 @@ mongoose.connect(mongoConnectionLink).then(() => {
 
 const app = express();
 
-app.use()
+app.use(addLogger)
 
 app.use(
   session({
