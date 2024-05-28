@@ -38,4 +38,6 @@ sessionRouter.get("/logout", SessionsController.logOut);
 
 sessionRouter.get("/current", privateAcess, SessionsController.current);
 
+sessionRouter.post('/reset-password', SessionsController.resetPassword)
+
 export default sessionRouter;

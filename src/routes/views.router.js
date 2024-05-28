@@ -26,4 +26,6 @@ router.get("/register", publicAccess, ViewsController.register);
 
 router.get("/login", publicAccess, ViewsController.login);
 
+router.get("/reset-password", publicAccess, ViewsController.getPasswordResetForm);
+
 export default router;

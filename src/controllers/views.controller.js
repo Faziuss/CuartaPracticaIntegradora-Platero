@@ -51,6 +51,14 @@ class ViewsController {
   static async login(_req, res) {
     res.render("login");
   }
+
+  static async getPasswordResetForm(req, res){
+    try{
+        res.render('reset-password',{user: {}})
+    } catch (error) {
+        res.status(error.status || 500).send({status:'error', error: error.message})
+    }
+}
 }
 
 export default ViewsController;

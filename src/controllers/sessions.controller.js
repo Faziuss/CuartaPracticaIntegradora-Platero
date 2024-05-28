@@ -59,6 +59,16 @@ class SessionsController {
     const userDTO = new UserDTO(user);
     res.send({ user: userDTO });
   }
+
+  static async resetPassword(req, res){
+    try {
+
+        res.send({payload: true})
+    } catch (error) {
+        res.status(500).send({status:'error', error: error.message})
+    }
+}  
+
 }
 
 export default SessionsController;
