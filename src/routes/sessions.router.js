@@ -40,4 +40,6 @@ sessionRouter.get("/current", privateAcess, SessionsController.current);
 
 sessionRouter.post('/reset-password', SessionsController.resetPassword)
 
+sessionRouter.post('/change-password', SessionsController.changePassword)
+
 export default sessionRouter;

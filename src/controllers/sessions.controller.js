@@ -1,5 +1,7 @@
 import { AppError } from "../helpers/AppError.js";
 import UserDTO from "../dao/DTOs/userDTO.js";
+import { usersService } from "../repositories/index.js";
+import { createHash, isValidPassword } from "../utils/utils.js";
 
 class SessionsController {
   static async register(req, res) {
@@ -60,14 +62,13 @@ class SessionsController {
     res.send({ user: userDTO });
   }
 
-  static async resetPassword(req, res){
+  static async resetPassword(req, res) {
     try {
-
-        res.send({payload: true})
+      res.send({ payload: true });
     } catch (error) {
-        res.status(500).send({status:'error', error: error.message})
+      res.status(500).send({ status: "error", error: error.message });
     }
-}  
+  }
 
 }
 
