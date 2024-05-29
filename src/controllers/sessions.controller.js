@@ -67,27 +67,14 @@ class SessionsController {
     res.send({ user: userDTO });
   }
 
-/*   static async verifyToken(req, res) {
-    const { passwordResetToken } = req.params;
-
-    try {
-      jwt.verify(passwordResetToken, jwtSecret, (error) => {
-        if (error) {
-          return res.redirect("/reset-password");
-        }
-        res.redirect("/change-password");
-      });
-    } catch (error) {
-      res.status(500).send({ status: "error", error: error.message });
-    }
-  }
- */
   static async resetPassword(req, res) {
     try {
       const { email } = req.body;
       let user = await usersService.getByProperty("email", email);
       const payload = { id: user._id, email: user.email };
-      const passwordResetToken = jwt.sign(payload, jwtSecret, { expiresIn: "1h" });
+      const passwordResetToken = jwt.sign(payload, jwtSecret, {
+        expiresIn: "1h",
+      });
       await mailingService.sendPasswordResetMail(
         user,
         email,
@@ -105,7 +92,7 @@ class SessionsController {
       console.log("token is", token);
       const decoded = jwt.verify(token, jwtSecret);
       console.log("password is", newPassword);
-      let user = await usersService.getByProperty('_id', decoded.id);
+      let user = await usersService.getByProperty("_id", decoded.id);
       if (isValidPassword(user, newPassword)) {
         return res
           .status(400)
@@ -120,10 +107,10 @@ class SessionsController {
 
       res.send({ status: "success" });
     } catch (error) {
-      if (error.name === 'TokenExpiredError') {
-        res.status(400).send({ status: 'error', error: 'Token expired' });
+      if (error.name === "TokenExpiredError") {
+        res.status(400).send({ status: "error", error: "Token expired" });
       } else {
-        res.status(500).send({ status: 'error', error: error.message });
+        res.status(500).send({ status: "error", error: error.message });
       }
     }
   }

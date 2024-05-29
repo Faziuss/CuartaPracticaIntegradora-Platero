@@ -6,7 +6,7 @@ import MongoStore from "connect-mongo";
 import cartsRouter from "./routes/carts.router.js";
 import productsRouter from "./routes/products.router.js";
 import viewsRouter from "./routes/views.router.js";
-import testLoggerRouter from "./routes/loggerTest.router.js"
+import testLoggerRouter from "./routes/loggerTest.router.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import { errorHandler } from "./middlewares/errorHandler.js";
@@ -18,6 +18,7 @@ import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 import { mongoConnectionLink, sessionSecret, port } from "./config/config.js";
 import addLogger from "./middlewares/addLogger.middleware.js";
+import usersRouter from "./routes/users.router.js";
 
 mongoose.connect(mongoConnectionLink).then(() => {
   console.log("Connected successfully");
@@ -25,7 +26,7 @@ mongoose.connect(mongoConnectionLink).then(() => {
 
 const app = express();
 
-app.use(addLogger)
+app.use(addLogger);
 
 app.use(
   session({
@@ -59,7 +60,8 @@ app.use(express.static(`${__dirname}/dao`));
 app.use("/api/carts", cartsRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/sessions", sessionRouter);
-app.use("/loggerTest", testLoggerRouter)
+app.use("/loggerTest", testLoggerRouter);
+app.use("/api/users", usersRouter);
 app.use("/", viewsRouter);
 app.use(errorHandler);
 

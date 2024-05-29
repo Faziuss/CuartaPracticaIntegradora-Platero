@@ -1,5 +1,22 @@
 import { AppError } from "../helpers/AppError.js";
 
+export const checkRole = (roles) => (req, res, next) => {
+  const user = req.session.user;
+
+  if (!Array.isArray(roles)) {
+    roles = [roles];
+  }
+
+  if (!roles.includes(user.role)) {
+    return res.status(403).send({
+      status: "error",
+      error: `No estas autorizado para realizar esta acción, no eres un ${roles}`,
+    });
+  }
+
+  next();
+};
+
 export const roleAdmin = (req, res, next) => {
   const user = req.session.user;
 

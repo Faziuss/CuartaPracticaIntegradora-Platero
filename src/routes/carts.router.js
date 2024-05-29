@@ -8,7 +8,11 @@ router.post("/", CartsController.createCart);
 
 router.get("/:cid", CartsController.getCartById);
 
-router.post("/:cid/product/:pid", roleUser, CartsController.addProductToCart);
+router.post(
+  "/:cid/product/:pid",
+  checkRole(["Usuario", "Premium"]),
+  CartsController.addProductToCart
+);
 
 router.delete("/:cid/product/:pid", CartsController.deleteCartProduct);
 

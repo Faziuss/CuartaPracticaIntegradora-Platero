@@ -1,6 +1,5 @@
 import { productService } from "../repositories/index.js";
 import mongoose from "mongoose";
-import { AppError } from "../helpers/AppError.js";
 import CustomError from "../utils/CustomError.js";
 import { getInvalidIdTypeInfo } from "../utils/info.js";
 import ErrorTypes from "../utils/ErrorTypes.js";
@@ -32,11 +31,11 @@ class ProductsController {
       const isValid = mongoose.Types.ObjectId.isValid(pid);
       if (!isValid) {
         throw new CustomError({
-          name: 'Invalid id type error',
+          name: "Invalid id type error",
           cause: getInvalidIdTypeInfo(pid),
-          message: 'El tipo de ID ingresado no es valido',
-          code: ErrorTypes.INVALID_ID_TYPE_ERROR
-      })
+          message: "El tipo de ID ingresado no es valido",
+          code: ErrorTypes.INVALID_ID_TYPE_ERROR,
+        });
       }
 
       const product = await productService.getProductById(pid);
@@ -50,13 +49,17 @@ class ProductsController {
     try {
       const io = req.app.get("io");
       const body = req.body;
+      const user = req.session.user;
+      if (user.roles == "Premium") {
+        body.owner = user.email;
+      }
       const newProd = await productService.addProduct(body);
 
       io.emit("newProduct", newProd);
 
       res.send({ status: "sucess", message: "Nuevo producto agregado" });
     } catch (error) {
-      if (error instanceof mongoose.Error.ValidationError){
+      if (error instanceof mongoose.Error.ValidationError) {
       }
       return next(error);
     }
@@ -68,11 +71,11 @@ class ProductsController {
       const isValid = mongoose.Types.ObjectId.isValid(pid);
       if (!isValid) {
         throw new CustomError({
-          name: 'Invalid id type error',
+          name: "Invalid id type error",
           cause: getInvalidIdTypeInfo(pid),
-          message: 'El tipo de ID ingresado no es valido',
-          code: ErrorTypes.INVALID_ID_TYPE_ERROR
-      })
+          message: "El tipo de ID ingresado no es valido",
+          code: ErrorTypes.INVALID_ID_TYPE_ERROR,
+        });
       }
 
       await productService.updateProduct(pid, upProd);
@@ -92,11 +95,18 @@ class ProductsController {
       const isValid = mongoose.Types.ObjectId.isValid(pid);
       if (!isValid) {
         throw new CustomError({
-          name: 'Invalid id type error',
+          name: "Invalid id type error",
           cause: getInvalidIdTypeInfo(pid),
-          message: 'El tipo de ID ingresado no es valido',
-          code: ErrorTypes.INVALID_ID_TYPE_ERROR
-      })
+          message: "El tipo de ID ingresado no es valido",
+          code: ErrorTypes.INVALID_ID_TYPE_ERROR,
+        });
+      }
+      const product = await productService.getProductById(pid);
+      if (
+        req.session.user.roles == "Premium" &&
+        product.owner != req.session.user.email
+      ) {
+        throw new Error(`No puedes eliminar un producto que no te pertence.`);
       }
 
       await productService.deleteProduct(pid);

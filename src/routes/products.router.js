@@ -6,27 +6,37 @@ const router = Router();
 
 router.get("/", ProductsController.getProductsApi);
 
-router.get("/mockingproducts", (_req,res)=>{
+router.get("/mockingproducts", (_req, res) => {
+  const products = [];
 
-    const products = []
+  for (let i = 0; i < 100; i++) {
+    products.push(generateProducts());
+  }
 
-    for (let i = 0; i< 100; i++){
-        products.push(generateProducts())
-    }
-
-    return res.send({
-        status: "sucess",
-        payload: products,
-      });
-})
+  return res.send({
+    status: "sucess",
+    payload: products,
+  });
+});
 
 router.get("/:pid", ProductsController.getProductById);
 
-router.post("/", ProductsController.addProduct);
+router.post(
+  "/",
+  checkRole(["Usuario", "Premium"]),
+  ProductsController.addProduct
+);
 
-router.put("/:pid", ProductsController.updateProduct);
+router.put(
+  "/:pid",
+  checkRole(["Usuario", "Premium"]),
+  ProductsController.updateProduct
+);
 
-router.delete("/:pid", ProductsController.deleteProduct);
-
+router.delete(
+  "/:pid",
+  checkRole(["Usuario", "Premium"]),
+  ProductsController.deleteProduct
+);
 
 export default router;

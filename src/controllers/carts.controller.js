@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { cartService } from "../repositories/index.js";
+import { cartService, productService } from "../repositories/index.js";
 import { AppError } from "../helpers/AppError.js";
 mongoose;
 import CustomError from "../utils/CustomError.js";
@@ -26,11 +26,11 @@ class CartsController {
       const isValid = mongoose.Types.ObjectId.isValid(cid);
       if (!isValid) {
         throw new CustomError({
-          name: 'Invalid id type error',
+          name: "Invalid id type error",
           cause: getInvalidIdTypeInfo(pid),
-          message: 'El tipo de ID de carrito ingresado no es valido',
-          code: ErrorTypes.INVALID_ID_TYPE_ERROR
-      })
+          message: "El tipo de ID de carrito ingresado no es valido",
+          code: ErrorTypes.INVALID_ID_TYPE_ERROR,
+        });
       }
       const cart = await cartService.getCartById(cid);
       res.send({ status: "sucess", cart });
@@ -44,21 +44,31 @@ class CartsController {
       const isCartIDValid = mongoose.Types.ObjectId.isValid(cid);
       if (!isCartIDValid) {
         throw new CustomError({
-          name: 'Invalid id type error',
+          name: "Invalid id type error",
           cause: getInvalidIdTypeInfo(pid),
-          message: 'El tipo de ID de carrito ingresado no es valido',
-          code: ErrorTypes.INVALID_ID_TYPE_ERROR
-      })
+          message: "El tipo de ID de carrito ingresado no es valido",
+          code: ErrorTypes.INVALID_ID_TYPE_ERROR,
+        });
       }
 
       const isProductIDValid = mongoose.Types.ObjectId.isValid(pid);
       if (!isProductIDValid) {
         throw new CustomError({
-          name: 'Invalid id type error',
+          name: "Invalid id type error",
           cause: getInvalidIdTypeInfo(pid),
-          message: 'El tipo de ID de producto ingresado no es valido',
-          code: ErrorTypes.INVALID_ID_TYPE_ERROR
-      })
+          message: "El tipo de ID de producto ingresado no es valido",
+          code: ErrorTypes.INVALID_ID_TYPE_ERROR,
+        });
+      }
+
+      const product = await productService.getProductById(pid);
+      if (
+        req.session.user.roles == "Premium" &&
+        product.owner == req.session.user.email
+      ) {
+        throw new Error(
+          `No puedes agregar un producto al carrito que te pertenece`
+        );
       }
 
       if (req.session.user.cart !== cid) {
