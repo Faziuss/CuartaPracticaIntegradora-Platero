@@ -1,4 +1,10 @@
-import { productService, cartService, ticketService} from "../repositories/index.js";
+import {
+  productService,
+  cartService,
+  ticketService,
+} from "../repositories/index.js";
+import jwt from 'jsonwebtoken'
+import { jwtSecret } from "../config/config.js";
 
 class ViewsController {
   static async getHomeProducts(_req, res) {
@@ -31,19 +37,18 @@ class ViewsController {
   static async getCart(req, res) {
     const { cid } = req.params;
 
-    const cart = await cartService.getCartById(cid)
-  
-    return res.render("carts", {cart});
+    const cart = await cartService.getCartById(cid);
+
+    return res.render("carts", { cart });
   }
 
-  static async getTicketByEmail(req,res){
-      const email = req.session.user.email
-      const tickets = await ticketService.getTicketByEmail(email)
+  static async getTicketByEmail(req, res) {
+    const email = req.session.user.email;
+    const tickets = await ticketService.getTicketByEmail(email);
 
-      console.log("email", email, "tickets", tickets)
+    console.log("email", email, "tickets", tickets);
 
-      return res.render("tickets", {tickets})
-
+    return res.render("tickets", { tickets });
   }
   static async register(_req, res) {
     res.render("register");
@@ -52,13 +57,27 @@ class ViewsController {
     res.render("login");
   }
 
-  static async getPasswordResetForm(req, res){
-    try{
-        res.render('reset-password',{user: {}})
+  static async getPasswordResetForm(req, res) {
+    try {
+      res.render("reset-password", { user: {} });
     } catch (error) {
-        res.status(error.status || 500).send({status:'error', error: error.message})
+      res
+        .status(error.status || 500)
+        .send({ status: "error", error: error.message });
     }
-}
+  }
+
+  static getPasswordChangeForm(req, res) {
+    try {
+      const {token} = req.params
+      const decoded = jwt.verify(token, jwtSecret);
+      return res.render("change-password", { user: {decoded}, token });
+    } catch (error) {
+      res
+        .status(error.status || 500)
+        .send({ status: "error", error: error.message });
+    }
+  }
 }
 
 export default ViewsController;

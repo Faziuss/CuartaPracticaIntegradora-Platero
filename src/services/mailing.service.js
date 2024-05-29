@@ -1,5 +1,5 @@
-const nodemailer = require("nodemailer");
-const { mailing } = require("../config/config");
+import nodemailer from "nodemailer"
+import { mailing } from "../config/config.js";
 
 const transport = nodemailer.createTransport({
   service: mailing.service,
@@ -16,9 +16,11 @@ class MailingService {
       html: `
             <div>
                 <h1>Click aquí para resetear tu contraseña</h1>
-                <a href="http://localhost:8080/api/sessions/changePassword/${passwordResetToken}">Reset password</a>
+                <a href="http://localhost:8080/change-password/${passwordResetToken}">Reset password</a>
             </div>
         `,
     });
   }
 }
+
+export default MailingService
