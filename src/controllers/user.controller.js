@@ -1,4 +1,4 @@
-import { usersService } from "../repositories";
+import { usersService } from "../repositories/index.js";
 
 class UsersController {
   static async changeRole(req, res) {

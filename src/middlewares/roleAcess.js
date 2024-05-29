@@ -7,7 +7,7 @@ export const checkRole = (roles) => (req, res, next) => {
     roles = [roles];
   }
 
-  if (!roles.includes(user.role)) {
+  if (!roles.includes(user.roles)) {
     return res.status(403).send({
       status: "error",
       error: `No estas autorizado para realizar esta acción, no eres un ${roles}`,

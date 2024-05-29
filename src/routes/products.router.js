@@ -1,6 +1,6 @@
 import { Router } from "express";
 import ProductsController from "../controllers/products.controller.js";
-import { roleAdmin } from "../middlewares/roleAcess.js";
+import { checkRole } from "../middlewares/roleAcess.js";
 import generateProducts from "../utils/generateProducts.js";
 const router = Router();
 

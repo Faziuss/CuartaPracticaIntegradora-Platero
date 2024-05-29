@@ -1,6 +1,6 @@
 import { Router } from "express";
 import CartsController from "../controllers/carts.controller.js";
-import { roleUser } from "../middlewares/roleAcess.js";
+import { checkRole } from "../middlewares/roleAcess.js";
 
 const router = Router();
 
