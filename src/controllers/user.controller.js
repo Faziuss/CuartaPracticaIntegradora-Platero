@@ -7,7 +7,7 @@ class UsersController {
     try {
       const user = await usersService.getById(uid);
 
-      if (!["User", "Premium"].includes(user.roles)) {
+      if (!["Usuario", "Premium"].includes(user.roles)) {
         throw new Error("User has invalid role");
       }
 
