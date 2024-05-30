@@ -26,14 +26,14 @@ paths:
             type: integer
             description: Número de página para paginación
           responses:
-          "200":
-            description: Productos obtenidos sastifactoriamente de la base de datos
-            content:
-              application/json:
-                schema:
-                  type: array
-                  items:
-                    $ref: "#components/schemas/Product"
+            200":
+              description: Productos obtenidos sastifactoriamente de la base de datos
+              content:
+                application/json:
+                  schema:
+                    type: array
+                    products:
+                      $ref: "#components/schemas/Product"
     post:
       summary: Agrega un nuevo producto
       tags: [Products]
@@ -42,9 +42,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/requestBodies/Product'
+              $ref: "#/components/requestBodies/Product"
       responses:
-        '200':
+        "200":
           description: Producto agregado exitosamente
           content:
             application/json:
@@ -56,13 +56,13 @@ paths:
                   message:
                     type: string
                   product:
-                    $ref: '#/components/schemas/Product'
+                    $ref: "#/components/schemas/Product"
   /api/products/mockingproducts:
     get:
       summary: Obtiene una lista mocking products
       tags: [Products]
       responses:
-        '200':
+        "200":
           description: Lista de mocking products
           content:
             application/json:
@@ -74,7 +74,7 @@ paths:
                   payload:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Product'
+                      $ref: "#/components/schemas/Product"
   /products/{pid}:
     get:
       summary: Obtiene un producto por ID
@@ -87,7 +87,7 @@ paths:
             type: string
           description: ID del producto
       responses:
-        '200':
+        "200":
           description: Producto encontrado
           content:
             application/json:
@@ -97,7 +97,7 @@ paths:
                   status:
                     type: string
                   product:
-                    $ref: '#/components/schemas/Product'
+                    $ref: "#/components/schemas/Product"
     put:
       summary: Actualiza producto un producto existente
       tags: [Products]
@@ -113,9 +113,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/requestBodies/Product'
+              $ref: "#/components/requestBodies/Product"
       responses:
-        '200':
+        "200":
           description: Producto actualizado exitosamente
           content:
             application/json:
@@ -137,7 +137,7 @@ paths:
             type: string
           description: ID del producto
       responses:
-        '200':
+        "200":
           description: Producto eliminado exitosamente
           content:
             application/json:
@@ -177,9 +177,6 @@ components:
           type: array
           items:
             type: string
-        owner:
-          type: string
-          default: "Admin"
       example:
         title: "exampleProduct"
         description: "Descripción exampleProducto"
@@ -189,7 +186,6 @@ components:
         stock: 10
         category: "Example"
         thumbnails: ["image1.jpg", "image2.jpg"]
-        owner: "Admin"
   schemas:
     Product:
       type: object
@@ -207,7 +203,7 @@ components:
         status:
           type: boolean
         stock:
-          type: integer
+          type: number
         category:
           type: string
         thumbnails:
