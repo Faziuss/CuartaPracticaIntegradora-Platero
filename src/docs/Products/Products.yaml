@@ -1,0 +1,107 @@
+paths:
+  /api/products/:
+    get:
+      summmary: Obtiene todos los productos
+      tags: [Products]
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type: string
+            description: Filtros de búsqueda en formato JSON
+        - in: query
+          name: sort
+          schema:
+            type: string
+            enum: [asc, desc]
+            description: Ordenar los productos por precio (ascendente o descendente)
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            description: Límite de productos por página
+        - in: query
+          name: page
+          schema:
+            type: integer
+            description: Número de página para paginación
+          responses:
+          "200":
+            description: Productos obtenidos sastifactoriamente de la base de datos
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: "#components/schemas/Product"
+
+components:
+  requestBodies:
+    Product:
+      type: object
+      properties:
+        title:
+          type: string
+          required: true
+        description:
+          type: string
+          required: true
+        code:
+          type: string
+          required: true
+        price:
+          type: number
+          required: true
+        status:
+          type: boolean
+          required: true
+        stock:
+          type: integer
+          required: true
+        category:
+          type: string
+          required: true
+        thumbnails:
+          type: array
+          items:
+            type: string
+        owner:
+          type: string
+          default: "Admin"
+      example:
+        title: "exampleProduct"
+        description: "Descripción exampleProducto"
+        code: "AAAAA2"
+        price: 100
+        status: true
+        stock: 10
+        category: "Example"
+        thumbnails: ["image1.jpg", "image2.jpg"]
+        owner: "Admin"
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        code:
+          type: string
+        price:
+          type: number
+        status:
+          type: boolean
+        stock:
+          type: integer
+        category:
+          type: string
+        thumbnails:
+          type: array
+          items:
+            type: string
+        owner:
+          type: string
+          default: "Admin"

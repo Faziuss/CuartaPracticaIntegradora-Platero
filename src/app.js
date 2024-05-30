@@ -20,7 +20,7 @@ import { mongoConnectionLink, sessionSecret, port } from "./config/config.js";
 import addLogger from "./middlewares/addLogger.middleware.js";
 import usersRouter from "./routes/users.router.js";
 import swaggerJsDoc from "swagger-jsdoc";
-import swaggerUiExpress from 'swagger-ui-express'
+import swaggerUiExpress from "swagger-ui-express";
 
 mongoose.connect(mongoConnectionLink).then(() => {
   console.log("Connected successfully");
@@ -53,18 +53,18 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const swaggerOptions = {
-  definition:{
-      openapi: '3.0.1',
-      info: {
-          title: "Documetación de Ecommerce CoderHouse",
-          description: "API Ecommerce CoderHouse"
-      }
+  definition: {
+    openapi: "3.0.1",
+    info: {
+      title: "Documetación de Ecommerce CoderHouse",
+      description: "API Ecommerce CoderHouse",
+    },
   },
-  apis: [`${__dirname}/../docs/**/*.yaml`]
-}
+  apis: [`${__dirname}/docs/**/*.yaml`],
+};
 
-const specs = swaggerJsDoc(swaggerOptions)
-app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
+const specs = swaggerJsDoc(swaggerOptions);
+app.use("/apidocs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 
 app.engine("handlebars", handlebars.engine());
 app.set("views", `${__dirname}/views`);
