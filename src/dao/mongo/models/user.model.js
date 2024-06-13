@@ -1,11 +1,11 @@
-import mongoose, {Schema} from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const userSchema = new mongoose.Schema({
   first_name: String,
   last_name: String,
   email: {
-    type: String, 
-    unique:true
+    type: String,
+    unique: true,
   },
   age: Number,
   password: String,
@@ -14,10 +14,23 @@ const userSchema = new mongoose.Schema({
     default: "Usuario",
   },
   cart: {
-      type: Schema.Types.ObjectId,
-      ref: "carts",
-    }
-  });
+    type: Schema.Types.ObjectId,
+    ref: "carts",
+  },
+  documents: {
+    type: [
+      {
+        name: String,
+        reference: String,
+      },
+    ],
+    default: [],
+  },
+  last_connection: {
+    type: String,
+    default: null
+  }
+});
 
 const userModel = mongoose.model("users", userSchema);
 
