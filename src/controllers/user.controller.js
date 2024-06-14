@@ -26,6 +26,27 @@ class UsersController {
       res.status(500).send({ status: "error", error: error.message });
     }
   }
+
+  static async uploadDocuments(req, res){
+    try {
+        const {uid} = req.params; 
+        const result = await usersService.addDocuments(uid, req.files)
+        res.send({status:'success', payload: result})
+    } catch (error) {
+        res.status(500).send({status:'error', error: error.message})
+    }
+}
+
+static async uploadProfilePicture(req, res){
+  try {
+      const {uid} = req.params; 
+      const result = await usersService.addProfilePicture(uid, req.file)
+
+      res.send({status:'success', payload: result})
+  } catch (error) {
+      res.status(500).send({status:'error', error: error.message})
+  }
+}
 }
 
 export default UsersController;
