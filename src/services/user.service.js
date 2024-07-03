@@ -1,3 +1,7 @@
+import MailingService from "./mailing.service.js";
+
+const mailingService = new MailingService();
+
 class UsersService {
   constructor(dao) {
     this.dao = dao;
@@ -89,6 +93,44 @@ class UsersService {
 
     await this.update(user._id.toString(), { $set: { role: user.roles } });
     return await this.getById(uid);
+  }
+
+  async setLastConnection(id) {
+    const user = await this.getById(id);
+    await this.update(id, { last_connection: new Date() });
+  }
+
+  async delete(id) {
+    await this.dao.getById(id);
+    return await this.dao.delete(id);
+  }
+
+  async deleteUnactive() {
+    const users = await this.getAll();
+    const now = new Date();
+    let deletedCount = 0;
+    const time = 60 * 24 * 2;
+    for (const user of users) {
+      if (user.last_connection) {
+        if (this.getMinutesDifference(now, user.last_connection) > time) {
+          await this.delete(user._id);
+          await mailingService.sendDeletedAccountMail(
+            user.first_name,
+            user.email
+          );
+          deletedCount++;
+        }
+      }
+    }
+
+    return deletedCount;
+  }
+
+  getMinutesDifference(now, last_connection) {
+    let milisecondsDif = now - last_connection;
+    let minutes = Math.round(milisecondsDif / 1000 / 60);
+    console.log("minutes", minutes);
+    return minutes;
   }
 }
 

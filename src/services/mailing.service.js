@@ -21,6 +21,20 @@ class MailingService {
         `,
     });
   }
+  async sendDeletedAccountMail(name, destinationMail){
+
+    await transport.sendMail({
+        from: `Node service <${mailing.auth.user}>`,
+        to: destinationMail,
+        subject: `Password reset`,
+        html: `
+            <div>
+                <h1>Hola ${name}</h1>
+                <h1>Tu cuenta ha sido eliminada por inactividad</h1>
+            </div>
+        `
+    })
+}
 }
 
 export default MailingService

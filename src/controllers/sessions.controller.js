@@ -19,7 +19,6 @@ class SessionsController {
 
   static async login(req, res) {
     const user = req.user;
-
     req.session.user = {
       name: `${user.first_name} ${user.last_name}`,
       email: user.email,
@@ -27,6 +26,7 @@ class SessionsController {
       roles: user.roles,
       cart: user.cart,
     };
+    await usersService.setLastConnection(user._id);
     res.status(201).send({
       status: "sucess",
       payload: req.session.user,
