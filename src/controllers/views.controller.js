@@ -2,8 +2,9 @@ import {
   productService,
   cartService,
   ticketService,
+  usersService
 } from "../repositories/index.js";
-import jwt from 'jsonwebtoken'
+import jwt from "jsonwebtoken";
 import { jwtSecret } from "../config/config.js";
 
 class ViewsController {
@@ -69,9 +70,25 @@ class ViewsController {
 
   static getPasswordChangeForm(req, res) {
     try {
-      const {token} = req.params
+      const { token } = req.params;
       const decoded = jwt.verify(token, jwtSecret);
-      return res.render("change-password", { user: {decoded}, token });
+      return res.render("change-password", { user: { decoded }, token });
+    } catch (error) {
+      res
+        .status(error.status || 500)
+        .send({ status: "error", error: error.message });
+    }
+  }
+  static async getUsersMananger(req, res) {
+    try {
+      const users = await usersService.getAll();
+      const userRoles = users.map((user) => {
+        user.isUser = user.role == "Usuario";
+        user.isPremium = user.role == "Premium";
+        user.isAdmin = user.role == "Admin";
+        return user;
+      });
+      res.render("user-mananger", { users: users });
     } catch (error) {
       res
         .status(error.status || 500)

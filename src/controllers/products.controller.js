@@ -109,6 +109,10 @@ class ProductsController {
         throw new Error(`No puedes eliminar un producto que no te pertence.`);
       }
 
+      if(product.owner && product.owner != "Admin"){
+        await mailingService.sendDeletedPremiumMail(product.owner, product.name)
+      }
+
       await productService.deleteProduct(pid);
       io.emit("deleteProduct", pid);
 

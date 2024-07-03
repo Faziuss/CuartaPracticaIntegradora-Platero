@@ -26,7 +26,7 @@ class MailingService {
     await transport.sendMail({
         from: `Node service <${mailing.auth.user}>`,
         to: destinationMail,
-        subject: `Password reset`,
+        subject: `Account Deletion`,
         html: `
             <div>
                 <h1>Hola ${name}</h1>
@@ -34,6 +34,20 @@ class MailingService {
             </div>
         `
     })
+}
+
+async sendDeletedPremiumMail(destinationMail, productName){
+  await transport.sendMail({
+    from: `Node service <${mailing.auth.user}>`,
+    to: destinationMail,
+    subject: `Product Deletion`,
+    html: `
+        <div>
+            <h1>Hola</h1>
+            <h1>Tu producto ${productName} ha sido removido por un Admin</h1>
+        </div>
+    `
+})
 }
 }
 
