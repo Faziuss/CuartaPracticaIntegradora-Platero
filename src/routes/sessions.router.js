@@ -8,7 +8,7 @@ const sessionRouter = Router();
 sessionRouter.post(
   "/register",
   passport.authenticate("register", {
-    failureRedirect: "api/sessions/registerFail",
+    failureRedirect: "/api/sessions/registerFail",
   }), SessionsController.register
 );
 

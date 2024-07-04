@@ -17,7 +17,7 @@ const initializePassport = () => {
       {
         clientID: githubClientId,
         clientSecret: githubClientSecret,
-        callbackURL: "/api/sessions/githubcallback",
+        callbackURL: "https://proyectofinalbackend-platero-production.up.railway.app/api/sessions/githubcallback",
       },
       async (_accessToken, _refreshToken, profile, done) => {
         try {
