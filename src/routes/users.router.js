@@ -8,6 +8,7 @@ usersRouter.get('/', UsersController.getAll)
 usersRouter.get("/premium/:uid", roleAdmin, UsersController.changeRole);
 usersRouter.post('/:uid/documents', upload.array('document') ,UsersController.uploadDocuments)
 usersRouter.post('/:uid/profile-picture', upload.single('profile'), UsersController.uploadProfilePicture)
+usersRouter.put('/:uid', UsersController.updateUser)
 usersRouter.delete('/:uid', UsersController.deleteUser)
 usersRouter.delete('/', roleAdmin, UsersController.deleteUnactive)
 

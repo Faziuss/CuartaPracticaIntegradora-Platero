@@ -38,6 +38,18 @@ class UsersController {
     }
   }
 
+  static async updateUser(req, res){
+
+    const uid = req.params.uid; 
+    const {roles} = req.body;
+    try {
+        const payload = await usersService.update(uid,{roles});
+        res.send({status:'success', payload: payload})
+    } catch (error) {
+        res.status(500).send({status:'error', error: error.message})
+    }
+}
+
   static async uploadDocuments(req, res) {
     try {
       const { uid } = req.params;

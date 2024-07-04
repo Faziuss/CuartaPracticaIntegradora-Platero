@@ -2,7 +2,7 @@ import { Router } from "express";
 import publicAccess from "../middlewares/publicAcess.js";
 import privateAcess from "../middlewares/privateAcess.js";
 import ViewsController from "../controllers/views.controller.js";
-import { roleUser } from "../middlewares/roleAcess.js";
+import { roleAdmin, roleUser } from "../middlewares/roleAcess.js";
 
 const router = Router();
 
@@ -29,5 +29,7 @@ router.get("/login", publicAccess, ViewsController.login);
 router.get("/reset-password", publicAccess, ViewsController.getPasswordResetForm);
 
 router.get("/change-password/:token", ViewsController.getPasswordChangeForm);
+
+router.get("/user-manager", roleAdmin, ViewsController.getUsersMananger)
 
 export default router;

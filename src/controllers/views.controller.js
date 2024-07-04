@@ -83,12 +83,12 @@ class ViewsController {
     try {
       const users = await usersService.getAll();
       const userRoles = users.map((user) => {
-        user.isUser = user.role == "Usuario";
-        user.isPremium = user.role == "Premium";
-        user.isAdmin = user.role == "Admin";
+        user.isUser = user.roles == "Usuario";
+        user.isPremium = user.roles == "Premium";
+        user.isAdmin = user.roles == "Admin";
         return user;
       });
-      res.render("user-mananger", { users: users });
+      return res.render("user-manager", { users: users });
     } catch (error) {
       res
         .status(error.status || 500)
